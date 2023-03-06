@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 2.8.4)
+project(glpk-download NONE)
+
+include(ExternalProject)
+ExternalProject_Add(glpk
+    URL                 "https://ftp.gnu.org/gnu/glpk/glpk-4.65.tar.gz"
+    SOURCE_DIR          "${CMAKE_CURRENT_BINARY_DIR}/src"
+    BINARY_DIR          "${CMAKE_CURRENT_BINARY_DIR}/build"
+    # with -fPIC since we are linking this static library to a shared library, use pic
+    CONFIGURE_COMMAND   ${CMAKE_CURRENT_BINARY_DIR}/src/configure --prefix=${CMAKE_CURRENT_BINARY_DIR}/install --with-pic
+    BUILD_COMMAND       make install
+    INSTALL_COMMAND     ""
+    TEST_COMMAND        ""
+)
+

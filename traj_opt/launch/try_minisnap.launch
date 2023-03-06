@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="traj_opt" name="test" type="vis_minisnap" output="screen" />
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find traj_opt)/rviz/test_minisnap.rviz"/>
+</launch>

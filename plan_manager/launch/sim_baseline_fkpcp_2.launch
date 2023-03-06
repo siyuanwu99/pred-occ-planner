@@ -1,0 +1,51 @@
+<launch>
+  <env name="ROSCONSOLE_FORMAT" value="[${node}][${time:%H:%M:%S%F}][${severity}]:${message}"/>
+  <arg name="map_size_x" value="16" />
+  <arg name="map_size_y" value="16" />
+  <arg name="map_size_z" value="7" />
+  <arg name="obs_num" value="10" />
+  <arg name="num_robots" value="2" />
+  <!-- Number of obstacles -->
+
+  <include file="$(find planner)/launch/simulator/simulator_fake.launch">
+    <arg name="map_size_x" value="$(arg map_size_x)" />
+    <arg name="map_size_y" value="$(arg map_size_y)" />
+    <arg name="map_size_z" value="$(arg map_size_z)" />
+    <arg name="obs_num" value="$(arg obs_num)" />
+  </include>
+
+  <group ns="uav0">
+    <include file="$(find planner)/launch/simulator/drone_fake_perception.xml">
+      <arg name="drone_id" value="0" />
+      <arg name="num_robots" value="$(arg num_robots)" />
+      <arg name="map_size_x" value="$(arg map_size_x)" />
+      <arg name="map_size_y" value="$(arg map_size_y)" />
+      <arg name="map_size_z" value="$(arg map_size_z)" />
+      <arg name="init_x" value="-7" />
+      <arg name="init_y" value="0" />
+      <arg name="init_z" value="1" />
+      <arg name="goal_x" value="7" />
+      <arg name="goal_y" value="0" />
+      <arg name="goal_z" value="1" />
+    </include>
+  </group>
+
+  <group ns="uav1">
+    <include file="$(find planner)/launch/simulator/drone_fake_perception.xml">
+      <arg name="drone_id" value="1" />
+      <arg name="num_robots" value="$(arg num_robots)" />
+      <arg name="map_size_x" value="$(arg map_size_x)" />
+      <arg name="map_size_y" value="$(arg map_size_y)" />
+      <arg name="map_size_z" value="$(arg map_size_z)" />
+      <arg name="init_x" value="7" />
+      <arg name="init_y" value="0" />
+      <arg name="init_z" value="1" />
+      <arg name="goal_x" value="-7" />
+      <arg name="goal_y" value="0" />
+      <arg name="goal_z" value="1" />
+    </include>
+  </group>
+
+  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find planner)/rviz/sim_multi.rviz" />
+
+</launch>

@@ -1,0 +1,972 @@
+Panels:
+  - Class: rviz/Displays
+    Help Height: 0
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /Status1
+        - /Grid1
+        - /simulation_map1/Autocompute Value Bounds1
+        - /drone01
+        - /drone11
+        - /drone21
+        - /drone31
+        - /PointCloud21
+        - /MarkerArray1
+      Splitter Ratio: 0.43611112236976624
+    Tree Height: 660
+  - Class: rviz/Selection
+    Name: Selection
+  - Class: rviz/Tool Properties
+    Expanded:
+      - /2D Pose Estimate1
+      - /2D Nav Goal1
+      - /Publish Point1
+    Name: Tool Properties
+    Splitter Ratio: 0.5886790156364441
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+      - /TopDownOrtho1
+    Name: Views
+    Splitter Ratio: 0.5
+  - Class: rviz/Time
+    Name: Time
+    SyncMode: 0
+    SyncSource: PointCloud2
+Preferences:
+  PromptSaveOnExit: true
+Toolbars:
+  toolButtonStyle: 2
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 1
+      Class: rviz/Axes
+      Enabled: false
+      Length: 1
+      Name: Axes
+      Radius: 0.10000000149011612
+      Reference Frame: <Fixed Frame>
+      Show Trail: false
+      Value: false
+    - Alpha: 0.5
+      Cell Size: 1
+      Class: rviz/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 30
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Alpha: 0.15000000596046448
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 2.9000000953674316
+        Min Value: 0
+        Value: false
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 85; 170; 255
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Enabled: false
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: simulation_map
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.10000000149011612
+      Style: Boxes
+      Topic: /map_generator/global_cloud
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: false
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav0/planner/vis_astar_path
+              Name: AStar
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav0/planner/vis_start_goal
+              Name: goal_point
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav0/planner/vis_color_traj
+              Name: Trajectory
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav0/planner/vis_edge
+              Name: CrdEdge
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav0/planner/vis_mesh
+              Name: CrdMesh
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 4
+                Min Value: -0.14000000059604645
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 0; 0; 0
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: false
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: Obstacle
+              Position Transformer: XYZ
+              Queue Size: 100
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.10000000149011612
+              Style: Points
+              Topic: /uav0/planner/vis_obstacle
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: false
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav0/planner/vis_ctrl_pts
+              Name: CtrlPts
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+          Enabled: false
+          Name: Planning
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 2.750000238418579
+                Min Value: -0.24999988079071045
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 148; 167; 237
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: true
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: map inflate
+              Position Transformer: XYZ
+              Queue Size: 10
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.20000000298023224
+              Style: Boxes
+              Topic: /uav0/planner/map/occupancy_inflated
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: true
+          Enabled: false
+          Name: Mapping
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav0/planner/vis_fov
+              Name: FOV
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav0/odom_visualization/robot
+              Name: robot
+              Namespaces:
+                mesh: true
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Image
+              Enabled: false
+              Image Topic: /uav0_pcl_render_node/depth
+              Max Value: 1
+              Median window: 5
+              Min Value: 0
+              Name: depth
+              Normalize Range: true
+              Queue Size: 2
+              Transport Hint: raw
+              Unreliable: false
+              Value: false
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav0/traj_server/vis_traj
+              Name: TrajQueue
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Alpha: 1
+              Buffer Length: 1
+              Class: rviz/Path
+              Color: 148; 167; 237
+              Enabled: true
+              Head Diameter: 0.30000001192092896
+              Head Length: 0.20000000298023224
+              Length: 0.30000001192092896
+              Line Style: Billboards
+              Line Width: 0.10000000149011612
+              Name: drone_path
+              Offset:
+                X: 0
+                Y: 0
+                Z: 0
+              Pose Color: 255; 85; 255
+              Pose Style: None
+              Queue Size: 10
+              Radius: 0.029999999329447746
+              Shaft Diameter: 0.10000000149011612
+              Shaft Length: 0.10000000149011612
+              Topic: /uav0/odom_visualization/path
+              Unreliable: false
+              Value: true
+          Enabled: true
+          Name: Simulation
+      Enabled: true
+      Name: drone0
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav1/planner/vis_astar_path
+              Name: AStar
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav1/planner/vis_start_goal
+              Name: goal_point
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav1/planning/vis_color_traj
+              Name: Trajectory
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav1/planner/vis_edge
+              Name: CrdEdge
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav1/planner/vis_mesh
+              Name: CrdMesh
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav1/planner/vis_ctrl_pts
+              Name: CtrlPts
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+          Enabled: false
+          Name: Planning
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 2.750000238418579
+                Min Value: -0.24999988079071045
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 240; 157; 216
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: true
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: map inflate
+              Position Transformer: XYZ
+              Queue Size: 10
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.20000000298023224
+              Style: Boxes
+              Topic: /uav1/planner/map/occupancy_inflated
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: true
+          Enabled: false
+          Name: Mapping
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav1/planner/vis_fov
+              Name: FOV
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav1/odom_visualization/robot
+              Name: robot
+              Namespaces:
+                mesh: true
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav1/traj_server/vis_traj
+              Name: TrajQueue
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Alpha: 1
+              Buffer Length: 1
+              Class: rviz/Path
+              Color: 240; 157; 216
+              Enabled: true
+              Head Diameter: 0.30000001192092896
+              Head Length: 0.20000000298023224
+              Length: 0.30000001192092896
+              Line Style: Billboards
+              Line Width: 0.10000000149011612
+              Name: drone_path
+              Offset:
+                X: 0
+                Y: 0
+                Z: 0
+              Pose Color: 255; 85; 255
+              Pose Style: None
+              Queue Size: 10
+              Radius: 0.029999999329447746
+              Shaft Diameter: 0.10000000149011612
+              Shaft Length: 0.10000000149011612
+              Topic: /uav1/odom_visualization/path
+              Unreliable: false
+              Value: true
+          Enabled: true
+          Name: Simulation
+      Enabled: true
+      Name: drone1
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav2/planner/vis_astar_path
+              Name: AStar
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav2/planner/vis_start_goal
+              Name: goal_point
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav2/planner/vis_color_traj
+              Name: Trajectory
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav2/planner/vis_edge
+              Name: CrdEdge
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav2/planner/vis_mesh
+              Name: CrdMesh
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav2/planner/vis_ctrl_pts
+              Name: CtrlPts
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 4
+                Min Value: -0.14000000059604645
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 0; 0; 0
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: false
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: Obstacle
+              Position Transformer: XYZ
+              Queue Size: 100
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.05000000074505806
+              Style: Points
+              Topic: /uav2/planner/vis_obstacle
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: false
+          Enabled: false
+          Name: Planning
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 2.9000003337860107
+                Min Value: -0.24999988079071045
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 253; 191; 156
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: true
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: map inflate
+              Position Transformer: XYZ
+              Queue Size: 10
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.20000000298023224
+              Style: Boxes
+              Topic: /uav2/planner/map/occupancy_inflated
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: true
+          Enabled: false
+          Name: Mapping
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav2/planner/vis_fov
+              Name: FOV
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav2/odom_visualization/robot
+              Name: robot
+              Namespaces:
+                mesh: true
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Image
+              Enabled: false
+              Image Topic: /uav2_pcl_render_node/depth
+              Max Value: 1
+              Median window: 5
+              Min Value: 0
+              Name: depth
+              Normalize Range: true
+              Queue Size: 2
+              Transport Hint: raw
+              Unreliable: false
+              Value: false
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 4
+                Min Value: -0.14000000059604645
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 255; 255; 255
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: false
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: PointCloud2
+              Position Transformer: XYZ
+              Queue Size: 10
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.05000000074505806
+              Style: Flat Squares
+              Topic: /map_generator/global_cloud
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: false
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav2/traj_server/vis_traj
+              Name: TrajQueue
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Alpha: 1
+              Buffer Length: 1
+              Class: rviz/Path
+              Color: 253; 191; 156
+              Enabled: true
+              Head Diameter: 0.30000001192092896
+              Head Length: 0.20000000298023224
+              Length: 0.30000001192092896
+              Line Style: Billboards
+              Line Width: 0.10000000149011612
+              Name: drone_path
+              Offset:
+                X: 0
+                Y: 0
+                Z: 0
+              Pose Color: 255; 85; 255
+              Pose Style: None
+              Queue Size: 10
+              Radius: 0.029999999329447746
+              Shaft Diameter: 0.10000000149011612
+              Shaft Length: 0.10000000149011612
+              Topic: /uav2/odom_visualization/path
+              Unreliable: false
+              Value: true
+          Enabled: true
+          Name: Simulation
+      Enabled: true
+      Name: drone2
+    - Class: rviz/Group
+      Displays:
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav3/planner/vis_astar_path
+              Name: AStar
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav3/planner/vis_start_goal
+              Name: goal_point
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav3/planner/vis_color_traj
+              Name: Trajectory
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav2/planner/vis_edge
+              Name: CrdEdge
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav3/planner/vis_mesh
+              Name: CrdMesh
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav2/planner/vis_ctrl_pts
+              Name: CtrlPts
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 4
+                Min Value: -0.14000000059604645
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 0; 0; 0
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: false
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: Obstacle
+              Position Transformer: XYZ
+              Queue Size: 100
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.05000000074505806
+              Style: Points
+              Topic: /uav3/planner/vis_obstacle
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: false
+          Enabled: false
+          Name: Planning
+        - Class: rviz/Group
+          Displays:
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 2.9000003337860107
+                Min Value: -0.24999988079071045
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 165; 239; 186
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: true
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: map inflate
+              Position Transformer: XYZ
+              Queue Size: 10
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.20000000298023224
+              Style: Boxes
+              Topic: /uav3/planner/map/occupancy_inflated
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: true
+          Enabled: false
+          Name: Mapping
+        - Class: rviz/Group
+          Displays:
+            - Class: rviz/Marker
+              Enabled: false
+              Marker Topic: /uav3/planner/vis_fov
+              Name: FOV
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: false
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav3/odom_visualization/robot
+              Name: robot
+              Namespaces:
+                mesh: true
+              Queue Size: 100
+              Value: true
+            - Class: rviz/Image
+              Enabled: false
+              Image Topic: /uav2_pcl_render_node/depth
+              Max Value: 1
+              Median window: 5
+              Min Value: 0
+              Name: depth
+              Normalize Range: true
+              Queue Size: 2
+              Transport Hint: raw
+              Unreliable: false
+              Value: false
+            - Alpha: 1
+              Autocompute Intensity Bounds: true
+              Autocompute Value Bounds:
+                Max Value: 4
+                Min Value: -0.14000000059604645
+                Value: true
+              Axis: Z
+              Channel Name: intensity
+              Class: rviz/PointCloud2
+              Color: 255; 255; 255
+              Color Transformer: FlatColor
+              Decay Time: 0
+              Enabled: false
+              Invert Rainbow: false
+              Max Color: 255; 255; 255
+              Min Color: 0; 0; 0
+              Name: PointCloud2
+              Position Transformer: XYZ
+              Queue Size: 10
+              Selectable: true
+              Size (Pixels): 3
+              Size (m): 0.05000000074505806
+              Style: Flat Squares
+              Topic: /map_generator/global_cloud
+              Unreliable: false
+              Use Fixed Frame: true
+              Use rainbow: true
+              Value: false
+            - Class: rviz/Marker
+              Enabled: true
+              Marker Topic: /uav3/traj_server/vis_traj
+              Name: TrajQueue
+              Namespaces:
+                {}
+              Queue Size: 100
+              Value: true
+            - Alpha: 1
+              Buffer Length: 1
+              Class: rviz/Path
+              Color: 165; 239; 186
+              Enabled: true
+              Head Diameter: 0.30000001192092896
+              Head Length: 0.20000000298023224
+              Length: 0.30000001192092896
+              Line Style: Billboards
+              Line Width: 0.10000000149011612
+              Name: drone_path
+              Offset:
+                X: 0
+                Y: 0
+                Z: 0
+              Pose Color: 255; 85; 255
+              Pose Style: None
+              Queue Size: 10
+              Radius: 0.029999999329447746
+              Shaft Diameter: 0.10000000149011612
+              Shaft Length: 0.10000000149011612
+              Topic: /uav3/odom_visualization/path
+              Unreliable: false
+              Value: true
+          Enabled: true
+          Name: Simulation
+      Enabled: true
+      Name: drone3
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 4.148630619049072
+        Min Value: -0.8992749452590942
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: AxisColor
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.10000000149011612
+      Style: Flat Squares
+      Topic: /map_generator/global_cloud
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /ground_truth_velocity
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 255; 255; 255
+    Default Light: true
+    Fixed Frame: world
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+      Hide Inactive Objects: true
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/SetInitialPose
+      Theta std deviation: 0.2617993950843811
+      Topic: /initialpose
+      X std deviation: 0.5
+      Y std deviation: 0.5
+    - Class: rviz/SetGoal
+      Topic: /traj_start_trigger
+    - Class: rviz/PublishPoint
+      Single click: true
+      Topic: /clicked_point
+  Value: true
+  Views:
+    Current:
+      Class: rviz/ThirdPersonFollower
+      Distance: 27
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.05999999865889549
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Field of View: 0.7853981852531433
+      Focal Point:
+        X: -4.844677925109863
+        Y: -0.20901912450790405
+        Z: 0
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.07000000029802322
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.009999999776482582
+      Pitch: 1.5697963237762451
+      Target Frame: <Fixed Frame>
+      Yaw: 3.1715946197509766
+    Saved:
+      - Angle: 0
+        Class: rviz/TopDownOrtho
+        Enable Stereo Rendering:
+          Stereo Eye Separation: 0.05999999865889549
+          Stereo Focal Distance: 1
+          Swap Stereo Eyes: false
+          Value: false
+        Invert Z Axis: false
+        Name: TopDownOrtho
+        Near Clip Distance: 0.009999999776482582
+        Scale: 68.66041564941406
+        Target Frame: <Fixed Frame>
+        X: 0.04129139333963394
+        Y: -1.560315489768982
+      - Class: rviz/ThirdPersonFollower
+        Distance: 23.25237274169922
+        Enable Stereo Rendering:
+          Stereo Eye Separation: 0.05999999865889549
+          Stereo Focal Distance: 1
+          Swap Stereo Eyes: false
+          Value: false
+        Field of View: 0.7853981852531433
+        Focal Point:
+          X: -8.672297477722168
+          Y: -0.4924931526184082
+          Z: 2.1006035240134224e-06
+        Focal Shape Fixed Size: true
+        Focal Shape Size: 0.05000000074505806
+        Invert Z Axis: false
+        Name: ThirdPersonFollower
+        Near Clip Distance: 0.009999999776482582
+        Pitch: 0.9747970104217529
+        Target Frame: <Fixed Frame>
+        Yaw: 3.1431772708892822
+Window Geometry:
+  Displays:
+    collapsed: true
+  Height: 1372
+  Hide Left Dock: true
+  Hide Right Dock: false
+  QMainWindow State: 000000ff00000000fd00000004000000000000015c000004fefc0200000028fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005d00fffffffb0000001e0054006f006f006c002000500072006f0070006500720074006900650073020000056d0000024500000213000001f3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000003f000002d4000000cc00fffffffb0000000a00560069006500770073000000031900000224000000a900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d00650072006100000001d1000000b50000000000000000fb0000000a0049006d00610067006502000005000000039800000280000001e0fb0000000a006400650070007400680000000244000002310000001700fffffffb0000000a0049006d0061006700650100000415000000f80000000000000000fb0000000a0049006d00610067006501000003f4000001190000000000000000fb0000000a0064006500700074006800000004a2000000ac0000001700fffffffb0000000a0064006500700074006800000003b4000001b60000001700fffffffb0000000a0064006500700074006800000004b9000000950000000000000000fb0000000a006400650070007400680000000481000000cd0000000000000000fb0000000a006400650070007400680000000429000001250000000000000000fb0000000a0064006500700074006800000003b7000000af0000000000000000fb0000000a0064006500700074006800000003d5000000b50000000000000000fb0000000a006400650070007400680000000444000001260000000000000000fb0000000a00640065007000740068000000041f0000014b0000000000000000fb0000000a0064006500700074006800000001b8000000160000000000000000fb0000000a0064006500700074006800000001c1000000160000000000000000fb0000000a0064006500700074006800000004b1000000550000000000000000fb0000000a006400650070007400680000000505000000650000000000000000fb0000000a006400650070007400680000000502000000680000000000000000fb0000000a0064006500700074006800000004f9000000710000000000000000fb0000000a0064006500700074006800000004e9000000810000000000000000fb0000000a0064006500700074006800000004de0000008c0000000000000000fb0000000a0064006500700074006800000004cc0000009e0000000000000000fb0000000a0064006500700074006800000004bb000000af0000000000000000fb0000000a0064006500700074006800000004aa000000c00000000000000000fb0000000a006400650070007400680000000498000000d20000000000000000fb0000000a0049006d00610067006500000003fa000001540000000000000000fb0000000a006400650070007400680000000369000000d00000000000000000fb0000000a0064006500700074006801000003c6000000d30000000000000000fb0000000a0064006500700074006801000003a3000000d20000000000000000fb0000000a00640065007000740068000000038c000000d10000000000000000000000010000010f00000385fc0200000002fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000006100000003bfc0100000002fb0000000800540069006d00650000000000000006100000042400fffffffb0000000800540069006d0065010000000000000450000000000000000000000460000004fe00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Selection:
+    collapsed: false
+  Time:
+    collapsed: false
+  Tool Properties:
+    collapsed: false
+  Views:
+    collapsed: true
+  Width: 1120
+  X: 1120
+  Y: 1108
+  depth:
+    collapsed: false

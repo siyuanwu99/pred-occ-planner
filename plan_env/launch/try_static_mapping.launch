@@ -1,0 +1,128 @@
+<launch>
+
+  <arg name="init_x" value="-5.0" />
+  <arg name="init_y" value="0.0" />
+  <arg name="init_z" value="1.0" />
+  <arg name="map_size_x" value="10" />
+  <arg name="map_size_y" value="10" />
+  <arg name="map_size_z" value="5" />
+  <arg name="pool_size_x" value="120" />
+  <arg name="pool_size_y" value="120" />
+  <arg name="pool_size_z" value="50" />
+  <arg name="cx" value="321.04638671875"/>
+  <arg name="cy" value="243.44969177246094"/>
+  <arg name="fx" value="387.229248046875"/>
+  <arg name="fy" value="387.229248046875"/>
+
+
+  <node pkg="plan_env" name="map" type="test_grid_map_node" output="screen">
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="vel" value="1" />
+    <param name="time_step" value="0.01" />
+
+    <param name="pool_size_x" value="$(arg pool_size_x)" />
+    <param name="pool_size_y" value="$(arg pool_size_y)" />
+    <param name="pool_size_z" value="$(arg pool_size_z)" />
+
+    <remap from="~grid_map/odom" to="/odom" />
+    <remap from="~grid_map/cloud" to="/local_cloud" />
+    <remap from="~grid_map/pose" to="/drone_camera_pose_topic" />
+    <remap from="~grid_map/depth" to="/drone_depth_topic" />
+    
+    <param name="grid_map/resolution" value="0.1" />
+    <param name="grid_map/map_size_x" value="$(arg map_size_x)" />
+    <param name="grid_map/map_size_y" value="$(arg map_size_y)" />
+    <param name="grid_map/map_size_z" value="$(arg map_size_z)" />
+    <param name="grid_map/local_update_range_x" value="5.5" />
+    <param name="grid_map/local_update_range_y" value="5.5" />
+    <param name="grid_map/local_update_range_z" value="4.5" />
+    <param name="grid_map/obstacles_inflation" value="0.099" />
+    <param name="grid_map/local_map_margin" value="10" />
+    <param name="grid_map/ground_height" value="-0.01" />
+    <!-- camera parameter -->
+    <param name="grid_map/cx" value="$(arg cx)" />
+    <param name="grid_map/cy" value="$(arg cy)" />
+    <param name="grid_map/fx" value="$(arg fx)" />
+    <param name="grid_map/fy" value="$(arg fy)" />
+    <!-- depth filter -->
+    <param name="grid_map/use_depth_filter" value="true" />
+    <param name="grid_map/depth_filter_tolerance" value="0.15" />
+    <param name="grid_map/depth_filter_maxdist" value="5.0" />
+    <param name="grid_map/depth_filter_mindist" value="0.2" />
+    <param name="grid_map/depth_filter_margin" value="2" />
+    <param name="grid_map/k_depth_scaling_factor" value="1000.0" />
+    <param name="grid_map/skip_pixel" value="2" />
+    <!-- local fusion -->
+    <param name="grid_map/p_hit" value="0.65" />
+    <param name="grid_map/p_miss" value="0.35" />
+    <param name="grid_map/p_min" value="0.12" />
+    <param name="grid_map/p_max" value="0.90" />
+    <param name="grid_map/p_occ" value="0.80" />
+    <param name="grid_map/min_ray_length" value="0.1" />
+    <param name="grid_map/max_ray_length" value="4.5" />
+
+    <param name="grid_map/virtual_ceil_height" value="2.9" />
+    <param name="grid_map/visualization_truncate_height" value="1.8" />
+    <param name="grid_map/show_occ_time" value="false" />
+    <param name="grid_map/pose_type" value="1" />
+    <param name="grid_map/frame_id" value="world" />
+  </node>
+
+  <node pkg="map_generator" name="map_generator" type="random_forest" output="screen">
+    <param name="init_state_x" value="0.0" />
+    <param name="init_state_y" value="0.0" />
+    <param name="map/x_size" value="$(arg map_size_x)" />
+    <param name="map/y_size" value="$(arg map_size_y)" />
+    <param name="map/z_size" value="$(arg map_size_z)" />
+    <param name="map/resolution" value="0.1" />
+    <param name="map/frame_id" value="world" />
+
+    <param name="ObstacleShape/seed" value="-1" />
+    <param name="map/obs_num" value="40" />
+    <param name="ObstacleShape/lower_rad" value="0.2" />
+    <param name="ObstacleShape/upper_rad" value="0.4" />
+    <param name="ObstacleShape/lower_hei" value="3.0" />
+    <param name="ObstacleShape/upper_hei" value="3.0" />
+    <param name="ObstacleShape/set_cylinder" value="true" />
+
+    <param name="map/circle_num" value="0" />
+    <param name="ObstacleShape/radius_l" value="0.7" />
+    <param name="ObstacleShape/radius_h" value="0.5" />
+    <param name="ObstacleShape/z_l" value="0.7" />
+    <param name="ObstacleShape/z_h" value="0.8" />
+    <param name="ObstacleShape/theta" value="0.5" />
+
+    <param name="sensing/radius" value="2.0" />
+    <param name="sensing/rate" value="10.0" />
+  </node>
+
+  <node pkg="poscmd_2_odom" name="poscmd_2_odom" type="poscmd_2_odom" output="screen">
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <remap from="~command" to="/pos_command" />
+    <remap from="~odometry" to="/odom" />
+  </node>
+
+  <node pkg="local_sensing_node" type="pcl_render_node" name="pcl_render_node" output="screen">
+    <rosparam command="load" file="$(find local_sensing_node)/params/camera.yaml" />
+    <param name="sensing_horizon" value="5.0" />
+    <param name="sensing_rate" value="30.0" />
+    <param name="estimation_rate" value="30.0" />
+    <param name="is_camera_frame" value="false" />
+    <param name="is_dynamic_map" value="false" />
+
+    <param name="map/x_size" value="$(arg map_size_x)" />
+    <param name="map/y_size" value="$(arg map_size_y)" />
+    <param name="map/z_size" value="$(arg map_size_z)" />
+
+    <remap from="~global_map" to="/map_generator/global_cloud" />
+    <remap from="~odometry" to="/odom" />
+    <remap from="~pcl_render_node/cloud" to="/local_cloud" />
+  </node>
+
+  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find plan_env)/rviz/static_map.rviz" />
+
+</launch>

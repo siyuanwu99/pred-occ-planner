@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>separator</name>
+  <version>0.0.0</version>
+  <description>LP formulation to find plane that separates sets of points. Based on the ACL motoralloc library</description>
+
+  <author email="jtorde@mit.edu">Jesus Tordesillas </author>
+  <maintainer email="jtorde@mit.edu">Jesus Tordesillas</maintainer>
+
+  <license>MIT</license>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

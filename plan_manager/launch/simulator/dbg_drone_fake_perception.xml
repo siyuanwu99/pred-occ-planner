@@ -1,0 +1,92 @@
+<launch>
+  <arg name="drone_id" default="0" />
+  <arg name="init_x"/>
+  <arg name="init_y"/>
+  <arg name="init_z"/>
+  <arg name="init_qx" default="0"/>
+  <arg name="init_qy" default="0"/>
+  <arg name="init_qz" default="0"/>
+  <arg name="init_qw" default="1"/>
+  <arg name="goal_x"/>
+  <arg name="goal_y"/>
+  <arg name="goal_z"/>
+  <arg name="map_size_x"/>
+  <arg name="map_size_y"/>
+  <arg name="map_size_z"/>
+  <arg name="num_robots" default="1" />
+  <!-- <arg name="color_r" default="0.0" />
+  <arg name="color_g" default="0.0" />
+  <arg name="color_b" default="0.0" /> -->
+
+
+  <!-- Assign color to the drone -->
+  <include file="$(find planner)/launch/simulator/drone_colormap.launch">
+    <arg name="drone_id" value="$(arg drone_id)" />
+  </include>
+
+  <arg name="pose_topic" value="mavros/local_position/pose"/>
+  <arg name="odom_topic" value="mavros/local_position/odom"/>
+  <arg name="is_pose_subscribed" value="false" />
+
+  <!-- <node pkg="planner" name="planner" type="baseline" output="screen"> -->
+      <node 
+          pkg="planner" 
+          name="planner" type="fake_baseline" 
+          launch-prefix="terminator -\-execute gdb -ex run -\-args" 
+          output="screen">
+    <!-- Topics -->
+    <remap from="~pose" to="$(arg pose_topic)" />
+    <remap from="~map/odom" to="$(arg odom_topic)" />
+    <remap from="~map/cloud" to="/map_generator/global_cloud" />
+    <remap from="~map/pose" to="$(arg pose_topic)" />
+    <remap from="~map/state" to="/ground_truth_state" />
+    <!-- Map ground truth statet -->
+    <rosparam file="$(find planner)/config/sim_fake.yaml" command="load" />
+    <param name="drone_id" value="$(arg drone_id)" />
+    <param name="swarm/num_robots" value="$(arg num_robots)" />
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="goal_x" value="$(arg goal_x)" />
+    <param name="goal_y" value="$(arg goal_y)" />
+    <param name="goal_z" value="$(arg goal_z)" />
+    <param name="vel" value="1" />
+    <param name="time_step" value="0.01" />
+    <param name="is_pose_sub" value="$(arg is_pose_subscribed)" />
+  </node>
+
+  <node pkg="traj_server" name="traj_server" type="bezier_traj_server" output="screen">
+    <remap from="~trajectory" to="planner/trajectory" />
+    <remap from="/position_cmd" to="controller/pos_cmd" />
+    <remap from="~odom" to="$(arg pose_topic)" />
+    <param name="tf" value="true" />
+    <param name="replan_time_threshold" value="1.2" />
+  </node>
+
+
+  <node pkg="poscmd_2_odom" name="poscmd_2_odom" type="poscmd_2_odom" output="screen">
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="init_qx" value="$(arg init_qx)" />
+    <param name="init_qy" value="$(arg init_qy)" />
+    <param name="init_qz" value="$(arg init_qz)" />
+    <param name="init_qw" value="$(arg init_qw)" />
+    <remap from="~command" to="controller/pos_cmd" />
+    <remap from="~odometry" to="$(arg odom_topic)" />
+    <remap from="~pose" to="$(arg pose_topic)" />
+  </node>
+
+  <!-- visualize drone odometry -->
+  <node pkg="odom_visualization" name="odom_visualization" type="odom_visualization" output="screen">
+    <remap from="~odom" to="$(arg odom_topic)" />
+    <param name="color/a" value="1.0" />
+    <!-- <param name="color/r" value="$(arg color_r)" />
+    <param name="color/g" value="$(arg color_g)" />
+    <param name="color/b" value="$(arg color_b)" /> -->
+    <param name="covariance_scale" value="100.0" />
+    <param name="robot_scale" value="1.0" />
+    <param name="tf45" value="true" />
+    <param name="drone_id" value="$(arg drone_id)" />
+  </node>
+</launch>

@@ -1,0 +1,120 @@
+<launch>  <!-- TODO: BUGS in A star search -->
+
+  <arg name="init_x" value="-4.0" />
+  <arg name="init_y" value="0.0" />
+  <arg name="init_z" value="0.0" />
+  <arg name="vel_x" value="1.0" />
+  <arg name="vel_y" value="0.5" />
+  <arg name="vel_z" value="0.0" />
+  <arg name="map_size_x" value="10" />
+  <arg name="map_size_y" value="10" />
+  <arg name="map_size_z" value="5" />
+  <arg name="pool_size_x" value="120" />
+  <arg name="pool_size_y" value="120" />
+  <arg name="pool_size_z" value="50" />
+  <arg name="cx" value="321.04638671875"/>
+  <arg name="cy" value="243.44969177246094"/>
+  <arg name="fx" value="387.229248046875"/>
+  <arg name="fy" value="387.229248046875"/>
+
+
+  <node pkg="path_searching" name="astar" type="fake_risk_a_star_node" 
+  output="screen">
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="vel_x" value="$(arg vel_x)" />
+    <param name="vel_y" value="$(arg vel_y)" />
+    <param name="vel_z" value="$(arg vel_z)" />
+
+    <remap from="~map/odom" to="/odom" />
+    <remap from="~map/cloud" to="/local_cloud" />
+    <remap from="~map/pose" to="/drone_camera_pose_topic" />
+    <remap from="~map/depth" to="/drone_depth_topic" />
+    <remap from="~map/state" to="/ground_truth_state" />
+    <!-- Resolutions -->
+    <param name="map/resolution" value="0.10" />
+    <param name="map/risk_threshold" value="0.10" />
+    <param name="map/local_update_range_x" value="4.5" />
+    <param name="map/local_update_range_y" value="4.5" />
+    <param name="map/local_update_range_z" value="3.5" />
+    <param name="map/clearance" value="0.15" />
+    <param name="map/booleans/pub_spatio_temporal" value="true" />
+    <param name="map/booleans/pub_world_frame" value="false" />
+
+    <param name="search/is_test" value="true" type="bool"/>
+    <param name="search/max_tau" value="1.6" type="double"/>
+    <param name="search/max_vel" value="3" type="double"/>
+    <param name="search/max_acc" value="6" type="double"/>
+    <param name="search/w_time" value="10.0" type="double"/>
+    <param name="search/horizon" value="3.0" type="double"/>
+    <param name="search/lambda_heu" value="5.0" type="double"/>
+    <param name="search/resolution_astar" value="0.1" type="double"/>
+    <param name="search/time_resolution" value="0.2" type="double"/>
+    <param name="sample_duration" value="0.2" type="double"/>
+    <param name="search/margin" value="0.1" type="double"/>
+    <!-- TODO -->
+    <param name="search/allocate_num" value="10000" type="int"/>
+    <param name="search/check_num" value="10" type="int"/>
+  </node>
+
+  <node pkg="map_generator" name="map_generator" type="dynamic_forest_seq">
+    <remap from="~global_cloud" to="/local_cloud" />
+    <remap from="~global_cylinder_state" to="/ground_truth_state" />
+    <param name="init_state_x" value="0.0" />
+    <param name="init_state_y" value="0.0" />
+    <param name="map/x_size" value="$(arg map_size_x)" />
+    <param name="map/y_size" value="$(arg map_size_y)" />
+    <param name="map/z_size" value="$(arg map_size_z)" />
+    <param name="map/resolution" value="0.10" />
+    <param name="map/frame_id" value="world" />
+    <param name="map/test" value="true" />
+    <param name="ObstacleShape/seed" value="-1" />
+    <param name="map/obs_num" value="2" />
+    <param name="ObstacleShape/lower_rad" value="0.3" />
+    <param name="ObstacleShape/upper_rad" value="0.8" />
+    <param name="ObstacleShape/lower_hei" value="4.0" />
+    <param name="ObstacleShape/upper_hei" value="4.0" />
+    <param name="ObstacleShape/upper_vel" value="0.2" />
+    <param name="ObstacleShape/set_cylinder" value="true" />
+    <param name="map/circle_num" value="5"/>        
+    <param name="ObstacleShape/radius_l" value="0.7"/>        
+    <param name="ObstacleShape/radius_h" value="2.5"/>        
+    <param name="ObstacleShape/z_l" value="0.8"/>        
+    <param name="ObstacleShape/z_h" value="2.0"/>        
+    <param name="ObstacleShape/dr" value="0.0"/>        
+    <param name="ObstacleShape/theta" value="0.2"/>        
+    <param name="sensing/radius" value="5.0" />
+    <param name="sensing/rate" value="10.0" />
+  </node>
+
+  <!--
+  <node pkg="local_sensing_node" type="pcl_render_node" name="pcl_render_node">
+    <rosparam command="load" file="$(find local_sensing_node)/params/camera.yaml" />
+    <param name="sensing_horizon" value="6.0" />
+    <param name="sensing_rate" value="30.0" />
+    <param name="estimation_rate" value="30.0" />
+    <param name="is_camera_frame" value="true" />
+    <param name="is_dynamic_map" value="true" />
+
+    <param name="map/x_size" value="$(arg map_size_x)" />
+    <param name="map/y_size" value="$(arg map_size_y)" />
+    <param name="map/z_size" value="$(arg map_size_z)" />
+
+    <remap from="~global_map" to="/map_generator/global_cloud" />
+    <remap from="~odometry" to="/odom" />
+    <remap from="~pcl_render_node/cloud" to="/local_cloud" />
+  </node> -->
+
+  <node pkg="poscmd_2_odom" name="poscmd_2_odom" type="poscmd_2_odom" output="screen">
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <remap from="~command" to="controller/pos_cmd" />
+    <remap from="~odometry" to="/odom" />
+    <remap from="~pose" to="/drone_camera_pose_topic" />
+  </node>
+
+  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find path_searching)/rviz/astar.rviz" />
+
+</launch>

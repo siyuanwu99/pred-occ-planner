@@ -1,0 +1,88 @@
+planner:
+  corridor_tau: 0.2
+
+fsm:
+  goal_tolerance: 1.0
+  replan_tolerance: 1.0
+  replan_duration: 0.10
+
+search:
+  max_tau: 1.8 # Astar search time horizon
+  init_max_tau: 0.8 # Useless
+  max_vel: 2.0
+  max_acc: 6.0
+  w_time: 10.0
+  horizon: 5.0
+  lambda_heu: 5.0
+  resolution_astar: 0.1
+  time_resolution: 0.2
+  margin: 0.4
+  vel_margin: 0.0
+  allocate_num: 100000
+  check_num: 5
+
+corridor:
+  init_range: 1.5
+  min_volumn: 0.1
+  risk_threshold_single_voxel: 0.15 # Useless
+  risk_threshold_corridor: 3.0 # Useless
+
+optimizer: # Useless
+  pos_factor: 0.0
+  vel_factor: 0.0
+  acc_factor: 0.0
+  jerk_factor: 0.0
+  snap_factor: 1.0 # minimum snap
+  delta_corridor: 0.4
+
+  max_vel_optimization: 2 # Constraint in optimization. A little larger than max_vel
+  max_acc_optimization: 6 # Constraint in optimization. A little larger than max_acc
+
+map:
+  booleans:
+    sub_pose: true
+    pub_world_frame: false
+    pub_spatio_temporal: false
+  local_update_range_x: 4.5
+  local_update_range_y: 4.5
+  local_update_range_z: 3.5
+  resolution: 0.10
+  risk_threshold: 0.2
+
+  angle_resolution: 3
+  time_resolution: 0.2
+  n_risk_map: 3
+  n_prediction_per_risk: 3
+  n_particles_max_per_voxel: 18
+  stddev_pos: 0.05
+  stddev_vel: 0.05
+  sigma_update: 0.1
+  sigma_observation: 0.05
+  sigma_localization: 0.00
+  newborn/particles_weight: 0.0001
+  newborn/particles_number: 20
+  newborn/objects_weight: 0.04
+  half_fov_horizontal: 48
+  half_fov_vertical: 36
+
+  obstacles_inflation: 0.3
+  local_map_margin: 10
+  ground_height: -0.01
+
+  clearance: 0.3
+
+  publish_spatio_temporal: true
+  virtual_ceil_height: 2.9
+  visualization_truncate_height: 1.8
+  show_occ_time: false
+  pose_type: 1
+  frame_id: world
+
+visualization:
+  rviz_map_center_locked: false
+
+swarm:
+  num_robots: 4
+  drone_size_x: 0.3
+  drone_size_y: 0.3
+  drone_size_z: 0.4

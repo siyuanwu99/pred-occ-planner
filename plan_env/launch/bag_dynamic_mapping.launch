@@ -1,0 +1,72 @@
+<launch>
+
+  <arg name="init_x" value="-5.0" />
+  <arg name="init_y" value="0.0" />
+  <arg name="init_z" value="1.0" />
+  <arg name="map_size_x" value="13" />
+  <arg name="map_size_y" value="13" />
+  <arg name="map_size_z" value="7" />
+  <arg name="pool_size_x" value="120" />
+  <arg name="pool_size_y" value="120" />
+  <arg name="pool_size_z" value="50" />
+  <arg name="is_pose_subscribed" value="true" />
+
+  <node pkg="plan_env" name="map" type="dsp_map_node" output="screen">
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="vel" value="1" />
+    <param name="time_step" value="0.01" />
+
+    <param name="is_pose_sub" value="$(arg is_pose_subscribed)" />
+
+    <!-- <param name="grid_map/map_size_x" value="$(arg map_size_x)" />
+    <param name="grid_map/map_size_y" value="$(arg map_size_y)" />
+    <param name="grid_map/map_size_z" value="$(arg map_size_z)" /> -->
+    <param name="grid_map/voxel_size_x" value="65" />
+    <param name="grid_map/voxel_size_y" value="65" />
+    <param name="grid_map/voxel_size_z" value="35" />
+    <!-- Topics -->
+    <remap from="~grid_map/odom" to="/odom" />
+    <remap from="~grid_map/cloud" to="/camera_front/depth/points" />
+    <remap from="~grid_map/pose" to="/mavros/local_position/pose" />
+    <remap from="~grid_map/depth" to="/drone_depth_topic" />
+    <!-- Resolutions -->
+    <param name="grid_map/resolution" value="0.15" />
+    <param name="grid_map/angle_resolution" value="3" />
+    <param name="grid_map/time_resolution" value="0.2" />
+    <!-- Num particles -->
+    <param name="grid_map/n_risk_map" value="3" />
+    <param name="grid_map/n_prediction_per_risk" value="3" />
+    <param name="grid_map/n_particles_max_per_voxel" value="18" />
+    <!-- Variances -->
+    <param name="grid_map/stddev_pos" value="0.05" />
+    <param name="grid_map/stddev_vel" value="0.05" />
+    <param name="grid_map/sigma_update" value="0.1" />
+    <param name="grid_map/sigma_observation" value="0.05" />
+    <param name="grid_map/sigma_localization" value="0.00" />
+    <!-- Newborn particles -->
+    <param name="grid_map/newborn/particles_weight" value="0.0001" />
+    <param name="grid_map/newborn/particles_number" value="20" />
+    <param name="grid_map/newborn/objects_weight"   value="0.04" />
+    <!-- FOV settings -->
+    <param name="grid_map/half_fov_horizontal" value="48" />
+    <param name="grid_map/half_fov_vertical" value="36" />
+
+    <param name="grid_map/local_update_range_x" value="5.5" />
+    <param name="grid_map/local_update_range_y" value="5.5" />
+    <param name="grid_map/local_update_range_z" value="4.5" />
+    <param name="grid_map/obstacles_inflation" value="0.3" />
+    <param name="grid_map/local_map_margin" value="10" />
+    <param name="grid_map/ground_height" value="-0.01" />
+
+    <param name="grid_map/virtual_ceil_height" value="2.9" />
+    <param name="grid_map/visualization_truncate_height" value="1.8" />
+    <param name="grid_map/show_occ_time" value="false" />
+    <param name="grid_map/pose_type" value="1" />
+    <param name="grid_map/frame_id" value="world" />
+  </node>
+
+  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find plan_env)/rviz/static_map.rviz" />
+
+</launch>
