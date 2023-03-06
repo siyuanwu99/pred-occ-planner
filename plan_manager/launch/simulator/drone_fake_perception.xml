@@ -80,7 +80,7 @@
   <node pkg="odom_visualization" name="odom_visualization" type="odom_visualization" output="screen">
     <remap from="~odom" to="$(arg odom_topic)" />
     <param name="color/a" value="1.0" />
-    <param name="mesh_resource" value="file:///home/siyuan/Downloads/quadrotor.dae" />
+    <param name="mesh_resource" value="package://odom_visualization/meshes/quadrotor.dae" />
     <!-- <param name="color/r" value="$(arg color_r)" />
     <param name="color/g" value="$(arg color_g)" />
     <param name="color/b" value="$(arg color_b)" /> -->
