@@ -1,0 +1,6 @@
+[submodule "uav_simulator"]
+	path = uav_simulator
+	url = git@github.com:edmundwsy/uav_simulator.git
+[submodule "eval_helper"]
+	path = eval_helper
+	url = git@github.com:edmundwsy/eval_helper.git
