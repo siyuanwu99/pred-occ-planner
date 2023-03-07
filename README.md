@@ -6,6 +6,12 @@ submitted to IROS 2023
 
 This work proposes a decentralized multi-agent trajectory planning framework based on an occupancy prediction map to address the challenge of autonomous navigation of multiple drones in dynamic environments. The occupancy prediction map forecasts the future occupancy status which provides a simplified approach for planning in dynamic environment without segmenting moving obstacles from the environment.
 
+
+
+https://user-images.githubusercontent.com/44539400/223415381-6c7bb7a4-94b9-4e77-b92f-c02b3ea6eb01.mp4
+
+
+
 ## Installation
 
 **Tested environment**: Ubuntu 20.04 + ROS Noetic
@@ -81,4 +87,5 @@ We thanks greatly for the authors of the following opensource projects:
 - [map-generator](https://github.com/yuwei-wu/map_generator) (complex structured map generation)
 - [EGO-planner-v2](https://github.com/ZJU-FAST-Lab/EGO-Planner-v2) (comparison baseline)
 - [MADER](https://github.com/mit-acl/mader) (comparison baseline)
+- [GCOPTER](https://github.com/ZJU-FAST-Lab/GCOPTER) (efficient corridor generation and trajectory optimization)
 - [DSP-map](https://github.com/g-ch/DSP-map) (inspiration of occupancy prediction map)
