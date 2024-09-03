@@ -1,16 +1,8 @@
-# pred-occ-planner
+# Decentralized Multi-Agent Trajectory Planning in Dynamic Environments with Spatiotemporal Occupancy Grid Maps
 
-title: **Multi-Agent Trajectory Planning in Dynamic Environments with Occupancy Prediction**
-
-submitted to IROS 2023
-
-This work proposes a decentralized multi-agent trajectory planning framework based on an occupancy prediction map to address the challenge of autonomous navigation of multiple drones in dynamic environments. The occupancy prediction map forecasts the future occupancy status which provides a simplified approach for planning in dynamic environment without segmenting moving obstacles from the environment.
-
-
+This paper proposes a decentralized trajectory planning framework for the collision avoidance problem of mul- tiple micro aerial vehicles (MAVs) in environments with static and dynamic obstacles. The framework utilizes spatiotemporal occupancy grid maps (SOGM), which forecast the occupancy status of neighboring space in the near future, as the environ- ment representation. Based on this representation, we extend the kinodynamic A\* and the corridor-constrained trajectory optimization algorithms to efficiently tackle static and dynamic obstacles with arbitrary shapes. Collision avoidance between communicating robots is integrated by sharing planned tra- jectories and projecting them onto the SOGM. The simulation results show that our method achieves competitive performance against state-of-the-art methods in dynamic environments with different numbers and shapes of obstacles. Finally, the proposed method is validated in real experiments.
 
 https://user-images.githubusercontent.com/44539400/223415381-6c7bb7a4-94b9-4e77-b92f-c02b3ea6eb01.mp4
-
-
 
 ## Installation
 
@@ -75,9 +67,20 @@ The source code is released under GPLv3 license.
 
 ## Contact
 
+If you find this work helpful, I would greatly appreciate it if you could kindly cite this paper: [Decentralized Multi-Agent Trajectory Planning in Dynamic Environments with Spatiotemporal Occupancy Grid Maps](https://autonomousrobots.nl/assets/files/publications/24-wu-icra.pdf)
+
+```
+@article{wu2024decentralized,
+  title={Decentralized Multi-Agent Trajectory Planning in Dynamic Environments with Spatiotemporal Occupancy Grid Maps},
+  author={Wu, Siyuan and Chen, Gang and Shi, Moji and Alonso-Mora, Javier},
+  journal={arXiv preprint arXiv:2404.15602},
+  year={2024}
+}
+```
+
 If you have any questions, please contact:
 
-- Siyuan Wu {[s.wu-14@student.tudelft.nl]()}
+- Siyuan Wu {[siyuanwu99@gmail.com]()}
 
 ## Acknowledgements
 
