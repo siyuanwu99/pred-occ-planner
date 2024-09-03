@@ -54,12 +54,6 @@ source devel/setup.bash
 roslaunch plan_manager sim_fkpcp_4_case_4.launch
 ```
 
-You can try a much more complex dynamic map as follows:
-
-```
-roslaunch plan_manager sim_new_4_case_3.launch
-```
-
 Then it will start a RVIZ window with 4 drones in a dynamic environment as follows:
 ![sim](./images/sim.gif)
 
@@ -67,7 +61,13 @@ Select "2D Nav" then click the RVIZ window to send a trigger. Drones will start 
 
 You can try other launch file for different tasks as well.
 
-## Licence
+You can even try a much more complex dynamic map as follows:
+
+```
+roslaunch plan_manager sim_new_4_case_3.launch
+```
+
+## Lisence
 
 The source code is released under GPLv3 license.
 
