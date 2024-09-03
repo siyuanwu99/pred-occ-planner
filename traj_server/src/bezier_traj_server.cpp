@@ -31,19 +31,19 @@ const bool if_vis_cmd = true;
 ros::Publisher pos_cmd_pub_, pva_pub_, vis_pub_;
 ros::Publisher error_pub_;
 
-const double DELTA_T = 0.01;  // 100 Hz
-constexpr double PI = 3.14159265358979323846;
+const double     DELTA_T             = 0.01;  // 100 Hz
+constexpr double PI                  = 3.14159265358979323846;
 constexpr double YAW_DOT_MAX_PER_SEC = PI;  // max yaw rate
-constexpr double MAX_YAW_CHANGE = YAW_DOT_MAX_PER_SEC * 0.01;
+constexpr double MAX_YAW_CHANGE      = YAW_DOT_MAX_PER_SEC * 0.01;
 
-bool is_traj_received_ = false;
-bool is_triggered_ = false;
-bool is_init_yaw_needed_ = false;
-bool is_yaw_initilized_ = false;
-bool is_odom_received_ = false;
+bool   is_traj_received_   = false;
+bool   is_triggered_       = false;
+bool   is_init_yaw_needed_ = false;
+bool   is_yaw_initilized_  = false;
+bool   is_odom_received_   = false;
 double replan_thres_ = 1.2;  // seconds of trajectory loaded into the queue
 
-int traj_id_;
+int               traj_id_;
 Bernstein::Bezier traj_;
 Bernstein::Bezier next_traj_;
 
@@ -53,17 +53,16 @@ double ti_;        // initial time, when planner is triggered
 double tns_;       // start time of the next trajectory
 double tne_;       // end time of the next trajectory
 double duration_;  // duration of the trajectory in seconds
-double
-    offset_;  // offset of the trajectory in seconds (to account for the time it takes to load
-              // the trajectory)
+double offset_;  // offset of the trajectory in seconds (to account for the time
+                 // it takes to load the trajectory)
 
-double init_yaw_ = 0;     // initial yaw angle
-double last_yaw_ = 0;     // previous yaw value
+double init_yaw_    = 0;  // initial yaw angle
+double last_yaw_    = 0;  // previous yaw value
 double last_yawdot_ = 0;  // previous yawdot value
 
-Eigen::Vector3d init_pos_;   // initial velocity
-Eigen::Vector3d odom_pos_;   // current position
-Eigen::Quaterniond odom_q_;  // current orientation
+Eigen::Vector3d    init_pos_;  // initial velocity
+Eigen::Vector3d    odom_pos_;  // current position
+Eigen::Quaterniond odom_q_;    // current orientation
 
 std::deque<TrajPoint> traj_queue_;
 
@@ -78,8 +77,8 @@ TrajSrvVisualizer::Ptr vis_ptr_;
  * @param yaw_dot return yaw dot
  */
 void getYaw(const Eigen::Vector3d& v, double& yaw, double& yaw_dot) {
-  yaw = 0;
-  yaw_dot = 0;
+  yaw                 = 0;
+  yaw_dot             = 0;
   Eigen::Vector3d dir = v.normalized(); /* velocity direction */
   // std::cout << "dir: " << dir.transpose() << std::endl;
 
@@ -88,8 +87,7 @@ void getYaw(const Eigen::Vector3d& v, double& yaw, double& yaw_dot) {
   if (yaw_temp - last_yaw_ > PI) {
     if (yaw_temp - last_yaw_ - 2 * PI < -MAX_YAW_CHANGE) {
       yaw = last_yaw_ - MAX_YAW_CHANGE;
-      if (yaw < -PI)
-        yaw += 2 * PI;
+      if (yaw < -PI) yaw += 2 * PI;
 
       yaw_dot = -YAW_DOT_MAX_PER_SEC;
     } else {
@@ -102,8 +100,7 @@ void getYaw(const Eigen::Vector3d& v, double& yaw, double& yaw_dot) {
   } else if (yaw_temp - last_yaw_ < -PI) {
     if (yaw_temp - last_yaw_ + 2 * PI > MAX_YAW_CHANGE) {
       yaw = last_yaw_ + MAX_YAW_CHANGE;
-      if (yaw > PI)
-        yaw -= 2 * PI;
+      if (yaw > PI) yaw -= 2 * PI;
 
       yaw_dot = YAW_DOT_MAX_PER_SEC;
     } else {
@@ -116,14 +113,12 @@ void getYaw(const Eigen::Vector3d& v, double& yaw, double& yaw_dot) {
   } else {
     if (yaw_temp - last_yaw_ < -MAX_YAW_CHANGE) {
       yaw = last_yaw_ - MAX_YAW_CHANGE;
-      if (yaw < -PI)
-        yaw += 2 * PI;
+      if (yaw < -PI) yaw += 2 * PI;
 
       yaw_dot = -YAW_DOT_MAX_PER_SEC;
     } else if (yaw_temp - last_yaw_ > MAX_YAW_CHANGE) {
       yaw = last_yaw_ + MAX_YAW_CHANGE;
-      if (yaw > PI)
-        yaw -= 2 * PI;
+      if (yaw > PI) yaw -= 2 * PI;
 
       yaw_dot = YAW_DOT_MAX_PER_SEC;
     } else {
@@ -138,16 +133,18 @@ void getYaw(const Eigen::Vector3d& v, double& yaw, double& yaw_dot) {
   }
   if (fabs(yaw - last_yaw_) <= MAX_YAW_CHANGE)
     yaw = 0.5 * last_yaw_ + 0.5 * yaw;  // nieve LPF
-  yaw_dot = 0.5 * last_yawdot_ + 0.5 * yaw_dot;
-  last_yaw_ = yaw;
+  yaw_dot      = 0.5 * last_yawdot_ + 0.5 * yaw_dot;
+  last_yaw_    = yaw;
   last_yawdot_ = yaw_dot;
   // std::cout << "[dbg] yaw: " << yaw << " yaw_dot: " << yaw_dot << std::endl;
 }
 
 /** publish position command for gazebo simulation and real world test */
-void publishPVA(const Eigen::Vector3d& pos, const Eigen::Vector3d& vel,
-                const Eigen::Vector3d& acc, const double& yaw,
-                const double& yaw_dot) {
+void publishPVA(const Eigen::Vector3d& pos,
+                const Eigen::Vector3d& vel,
+                const Eigen::Vector3d& acc,
+                const double&          yaw,
+                const double&          yaw_dot) {
   trajectory_msgs::JointTrajectoryPoint pva_msg;
   pva_msg.positions.push_back(pos(0));
   pva_msg.positions.push_back(pos(1));
@@ -163,24 +160,26 @@ void publishPVA(const Eigen::Vector3d& pos, const Eigen::Vector3d& vel,
 }
 
 /** Publish position command for fake drone simulation */
-void publishCmd(const Eigen::Vector3d& pos, const Eigen::Vector3d& vel,
-                const Eigen::Vector3d& acc, const double& yaw,
-                const double& yaw_dot) {
+void publishCmd(const Eigen::Vector3d& pos,
+                const Eigen::Vector3d& vel,
+                const Eigen::Vector3d& acc,
+                const double&          yaw,
+                const double&          yaw_dot) {
   quadrotor_msgs::PositionCommand cmd_msg;
-  cmd_msg.header.stamp = ros::Time::now();
+  cmd_msg.header.stamp    = ros::Time::now();
   cmd_msg.header.frame_id = "world";
   cmd_msg.trajectory_flag =
       quadrotor_msgs::PositionCommand::TRAJECTORY_STATUS_READY;
   cmd_msg.trajectory_id = traj_id_;
 
-  cmd_msg.position.x = pos(0);
-  cmd_msg.position.y = pos(1);
-  cmd_msg.position.z = pos(2);
-  cmd_msg.yaw = yaw;
-  cmd_msg.velocity.x = vel(0);
-  cmd_msg.velocity.y = vel(1);
-  cmd_msg.velocity.z = vel(2);
-  cmd_msg.yaw_dot = yaw_dot;
+  cmd_msg.position.x     = pos(0);
+  cmd_msg.position.y     = pos(1);
+  cmd_msg.position.z     = pos(2);
+  cmd_msg.yaw            = yaw;
+  cmd_msg.velocity.x     = vel(0);
+  cmd_msg.velocity.y     = vel(1);
+  cmd_msg.velocity.z     = vel(2);
+  cmd_msg.yaw_dot        = yaw_dot;
   cmd_msg.acceleration.x = acc(0);
   cmd_msg.acceleration.y = acc(1);
   cmd_msg.acceleration.z = acc(2);
@@ -192,12 +191,16 @@ void publishCmd(const Eigen::Vector3d& pos, const Eigen::Vector3d& vel,
   }
 }
 
-void pushToTrajQueue(double t, const Eigen::Vector3d& pos,
-                     const Eigen::Vector3d& vel, const Eigen::Vector3d& acc,
-                     const Eigen::Vector3d& jrk, double yaw, double yaw_dot) {
+void pushToTrajQueue(double                 t,
+                     const Eigen::Vector3d& pos,
+                     const Eigen::Vector3d& vel,
+                     const Eigen::Vector3d& acc,
+                     const Eigen::Vector3d& jrk,
+                     double                 yaw,
+                     double                 yaw_dot) {
   // getYaw(vel, yaw, yaw_dot);
   ros::Time t0 = ros::Time().fromSec(ts_ + t);
-  TrajPoint p = {t0, pos, vel, acc, jrk, yaw, yaw_dot};
+  TrajPoint p  = {t0, pos, vel, acc, jrk, yaw, yaw_dot};
   traj_queue_.push_back(p);
 }
 
@@ -215,13 +218,13 @@ void fillTrajQueue() {
   }
 
   double t = tq - ts_;
-  if (t > duration_)
-    return;
+  if (t > duration_) return;
   pushToTrajQueue(t, traj_.getPos(t), traj_.getVel(t), traj_.getAcc(t),
                   Eigen::Vector3d::Zero(), 0, 0);
-  // ROS_INFO("[dbg] tq: %.2f id:%d sz:%d | t: %.2f | x: %.2f y: %.2f z: %.2f", tq - ti_, traj_id_,
-  //          int(traj_queue_.size()), t, traj_.getPos(t)(0), traj_.getPos(t)(1),
-  //          traj_.getPos(t)(2));
+  // ROS_INFO("[dbg] tq: %.2f id:%d sz:%d | t: %.2f | x: %.2f y: %.2f z: %.2f",
+  // tq - ti_, traj_id_,
+  //          int(traj_queue_.size()), t, traj_.getPos(t)(0),
+  //          traj_.getPos(t)(1), traj_.getPos(t)(2));
 }
 
 /**
@@ -233,38 +236,43 @@ void resetTrajQueue(const Bernstein::Bezier& traj) {
   for (; t < replan_thres_; t += DELTA_T) {
     pushToTrajQueue(t, traj.getPos(t), traj.getVel(t), traj.getAcc(t),
                     Eigen::Vector3d::Zero(), 0, 0);
-    // ROS_INFO("[dbg] tq: %.2f id:%d sz:%d | t: %.2f | x: %.2f y: %.2f z: %.2f", tns_ - ti_ + t,
-    //          traj_id_, int(traj_queue_.size()), t, traj.getPos(t)(0), traj.getPos(t)(1),
-    //          traj.getPos(t)(2));
+    // ROS_INFO("[dbg] tq: %.2f id:%d sz:%d | t: %.2f | x: %.2f y: %.2f z:
+    // %.2f", tns_ - ti_ + t,
+    //          traj_id_, int(traj_queue_.size()), t, traj.getPos(t)(0),
+    //          traj.getPos(t)(1), traj.getPos(t)(2));
   }
 }
 
 void mergeTrajQueue(const Bernstein::Bezier& traj) {
   int k = (ros::Time::now().toSec() + replan_thres_ - tns_) / DELTA_T;
   if (k > traj_queue_.size()) {
-    // ROS_INFO("[TrajSrv] t_str - tn = %f,  k = %d", ts_ - ros::Time::now().toSec(), k);
+    // ROS_INFO("[TrajSrv] t_str - tn = %f,  k = %d", ts_ -
+    // ros::Time::now().toSec(), k);
     ROS_WARN("[TrajSrv] Next traj starts earlier than current buffer!");
     double dt = ros::Time::now().toSec() - tns_;
     for (int i = 0; i < replan_thres_ / DELTA_T; i++) {
       double t = i * DELTA_T + dt;
       pushToTrajQueue(t, traj.getPos(t), traj.getVel(t), traj.getAcc(t),
                       Eigen::Vector3d::Zero(), 0, 0);
-      // ROS_INFO("[dbg] tq: %.2f id:%d sz:%d | t: %.2f | x: %.2f y: %.2f z: %.2f", tns_ - ti_ + t,
-      //          traj_id_, int(traj_queue_.size()), t, traj.getPos(t)(0), traj.getPos(t)(1),
-      //          traj.getPos(t)(2));
+      // ROS_INFO("[dbg] tq: %.2f id:%d sz:%d | t: %.2f | x: %.2f y: %.2f z:
+      // %.2f", tns_ - ti_ + t,
+      //          traj_id_, int(traj_queue_.size()), t, traj.getPos(t)(0),
+      //          traj.getPos(t)(1), traj.getPos(t)(2));
     }
     return;
   }
   traj_queue_.erase(traj_queue_.end() - k, traj_queue_.end());
-  // ROS_INFO("[dbg] tc: %.2f, tns: %.2f k:%d sz:%d", ros::Time::now().toSec() - ti_, tns_ - ti_, k,
+  // ROS_INFO("[dbg] tc: %.2f, tns: %.2f k:%d sz:%d", ros::Time::now().toSec() -
+  // ti_, tns_ - ti_, k,
   //          int(traj_queue_.size()));
   for (int i = 0; i < k; i++) {
     double t = i * DELTA_T;
     pushToTrajQueue(t, traj.getPos(t), traj.getVel(t), traj.getAcc(t),
                     Eigen::Vector3d::Zero(), 0, 0);
-    // ROS_INFO("[dbg] tq: %.2f id:%d sz:%d | t: %.2f | x: %.2f y: %.2f z: %.2f", tns_ - ti_ + t,
-    //          traj_id_ + 1, int(traj_queue_.size()), t, traj.getPos(t)(0), traj.getPos(t)(1),
-    //          traj.getPos(t)(2));
+    // ROS_INFO("[dbg] tq: %.2f id:%d sz:%d | t: %.2f | x: %.2f y: %.2f z:
+    // %.2f", tns_ - ti_ + t,
+    //          traj_id_ + 1, int(traj_queue_.size()), t, traj.getPos(t)(0),
+    //          traj.getPos(t)(1), traj.getPos(t)(2));
   }
 }
 
@@ -273,16 +281,16 @@ void mergeTrajQueue(const Bernstein::Bezier& traj) {
  * @param msg
  */
 void bezierCallback(traj_utils::BezierTrajConstPtr msg) {
-  int N = msg->order;
+  int N       = msg->order;
   int n_piece = msg->duration.size();  // number of pieces
-  int R = n_piece * (N + 1);           // number of control points
+  int R       = n_piece * (N + 1);     // number of control points
 
-  tns_ = msg->start_time.toSec();
+  tns_            = msg->start_time.toSec();
   ros::Time t_pub = msg->pub_time;
   ros::Time t_rcv = ros::Time::now();
 
   /* ----- get duration and time allocation ----- */
-  double duration = 0.0;
+  double              duration = 0.0;
   std::vector<double> time_alloc;
   for (auto it = msg->duration.begin(); it != msg->duration.end(); ++it) {
     duration += (*it);
@@ -328,8 +336,8 @@ void bezierCallback(traj_utils::BezierTrajConstPtr msg) {
 
   if (!is_triggered_) { /* if not triggered */
     ROS_INFO("[TrajSrv] not triggered yet, reset traj queue");
-    tns_ = ti_;
-    last_yaw_ = init_yaw_;
+    tns_         = ti_;
+    last_yaw_    = init_yaw_;
     last_yawdot_ = 0;
     resetTrajQueue(next_traj_);
   } else if (te_ <= tns_) { /* if the current trajectory is finished */
@@ -341,8 +349,8 @@ void bezierCallback(traj_utils::BezierTrajConstPtr msg) {
   }
 
   traj_ = next_traj_;
-  ts_ = tns_;
-  te_ = ts_ + duration_;
+  ts_   = tns_;
+  te_   = ts_ + duration_;
   traj_id_++;
 }
 
@@ -392,10 +400,10 @@ void pubTrackingError(const Eigen::Vector3d& pos_cmd,
                       const Eigen::Vector3d& pos_real) {
   geometry_msgs::PointStamped error_msg;
   error_msg.header.frame_id = "world";
-  error_msg.header.stamp = ros::Time::now();
-  error_msg.point.x = pos_cmd(0) - pos_real(0);
-  error_msg.point.y = pos_cmd(1) - pos_real(1);
-  error_msg.point.z = pos_cmd(2) - pos_real(2);
+  error_msg.header.stamp    = ros::Time::now();
+  error_msg.point.x         = pos_cmd(0) - pos_real(0);
+  error_msg.point.y         = pos_cmd(1) - pos_real(1);
+  error_msg.point.z         = pos_cmd(2) - pos_real(2);
   error_pub_.publish(error_msg);
 }
 
@@ -418,25 +426,26 @@ void PubCallback(const ros::TimerEvent& e) {
   p.vel = Eigen::Vector3d::Zero();
   p.acc = Eigen::Vector3d::Zero();
 
-  if (!is_yaw_initilized_) { /* if yaw is not initialized, turn to desired yaw */
+  if (!is_yaw_initilized_) { /* if yaw is not initialized, turn to desired yaw
+                              */
     if (abs(init_yaw_ - current_yaw) < 0.1) {
-      ROS_INFO("[dbg] yaw: %.2f -| %.2f, no need to move yaw", current_yaw,
-               init_yaw_);
+      // ROS_INFO("[dbg] yaw: %.2f -| %.2f, no need to move yaw", current_yaw,
+      //          init_yaw_);
       is_yaw_initilized_ = true;
       return;
     }
-    ROS_INFO("[dbg] t: %.2f yaw: %.2f --> %.2f", ros::Time::now().toSec(),
-             current_yaw, init_yaw_);
+    // ROS_INFO("[dbg] t: %.2f yaw: %.2f --> %.2f", ros::Time::now().toSec(),
+    //          current_yaw, init_yaw_);
     if (init_yaw_ < 0 && init_yaw_ > -3.12) {
-      p.yaw = current_yaw - MAX_YAW_CHANGE;
+      p.yaw     = current_yaw - MAX_YAW_CHANGE;
       p.yaw_dot = -YAW_DOT_MAX_PER_SEC;
 
     } else {
-      p.yaw = current_yaw + MAX_YAW_CHANGE;
+      p.yaw     = current_yaw + MAX_YAW_CHANGE;
       p.yaw_dot = YAW_DOT_MAX_PER_SEC;
     }
   } else {
-    p.yaw = current_yaw;
+    p.yaw     = current_yaw;
     p.yaw_dot = 0.0;
   }
 
@@ -452,10 +461,10 @@ void PubCallback(const ros::TimerEvent& e) {
       return;
     }
     if (traj_queue_.size() == 1) {
-      p = traj_queue_.front();
-      p.vel = Eigen::Vector3d::Zero();
-      p.acc = Eigen::Vector3d::Zero();
-      p.yaw = last_yaw_;
+      p         = traj_queue_.front();
+      p.vel     = Eigen::Vector3d::Zero();
+      p.acc     = Eigen::Vector3d::Zero();
+      p.yaw     = last_yaw_;
       p.yaw_dot = 0.0;
     } else {
       p = traj_queue_.front();
@@ -464,9 +473,9 @@ void PubCallback(const ros::TimerEvent& e) {
     }
   }
 
-  ROS_INFO("[dbg] t: %.2f | pos: %.2f %.2f %.2f | vel: %.2f %.2f %.2f",
-           p.t.toSec() - ti_, p.pos.x(), p.pos.y(), p.pos.z(), p.vel.x(),
-           p.vel.y(), p.vel.z());
+  // ROS_INFO("[dbg] t: %.2f | pos: %.2f %.2f %.2f | vel: %.2f %.2f %.2f",
+  //          p.t.toSec() - ti_, p.pos.x(), p.pos.y(), p.pos.z(), p.vel.x(),
+  //          p.vel.y(), p.vel.z());
 
   publishCmd(p.pos, p.vel, p.acc, p.yaw, p.yaw_dot);
   publishPVA(p.pos, p.vel, p.acc, p.yaw, p.yaw_dot);
@@ -493,8 +502,8 @@ int main(int argc, char** argv) {
   nh.param("is_init_yaw", is_init_yaw_needed_,
            false);  // correct yaw angle while initializing
 
-  ros::Timer cmd_timer = nh.createTimer(ros::Duration(0.01), PubCallback);
-  ros::Subscriber traj_sub = nh.subscribe("trajectory", 1, bezierCallback);
+  ros::Timer      cmd_timer = nh.createTimer(ros::Duration(0.01), PubCallback);
+  ros::Subscriber traj_sub  = nh.subscribe("trajectory", 1, bezierCallback);
   ros::Subscriber trigger_sub =
       nh.subscribe("/traj_start_trigger", 10, triggerCallback);
   ros::Subscriber pose_sub = nh.subscribe("pose", 10, poseCallback);
