@@ -1,0 +1,12 @@
+<launch>
+  <arg name="drone_id" default="2" />
+
+  <node pkg="plan_manager" name="firi" type="test_firi" output="screen">
+    <remap from="/path" to="/uav$(arg drone_id)/planner/vis_astar_path" />
+    <remap from="/points" to="/uav$(arg drone_id)/planner/vis_obstacle" />
+    <remap from="/odom" to="/uav$(arg drone_id)/mavros/local_position/odom" />
+  </node>
+
+  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find plan_manager)/rviz/firi.rviz" />
+
+</launch>

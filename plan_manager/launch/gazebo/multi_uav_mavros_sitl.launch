@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<launch>
+  <env name="ROSCONSOLE_FORMAT" value="[${node}][${severity}]:${message}"/>
+
+    <arg name="uav0_init_x" default="0"/>
+    <arg name="uav0_init_y" default="8"/>
+    <arg name="uav0_init_z" default="1"/>
+    <arg name="uav0_init_qx" default="0"/>
+    <arg name="uav0_init_qy" default="0"/>
+    <arg name="uav0_init_qz" default="-0.707"/>
+    <arg name="uav0_init_qw" default="0.707"/>
+    <arg name="uav0_goal_x" value="0" />
+    <arg name="uav0_goal_y" value="-8" />
+    <arg name="uav0_goal_z" value="1" />
+
+    <arg name="uav1_init_x" default="-0"/>
+    <arg name="uav1_init_y" default="-8"/>
+    <arg name="uav1_init_z" default="1"/>
+    <arg name="uav1_init_qx" default="0"/>
+    <arg name="uav1_init_qy" default="0"/>
+    <arg name="uav1_init_qz" default="0.707"/>
+    <arg name="uav1_init_qw" default="0.707"/>
+    <arg name="uav1_goal_x" value="0" />
+    <arg name="uav1_goal_y" value="8" />
+    <arg name="uav1_goal_z" value="1" />
+
+    <arg name="uav2_init_x" default="8"/>
+    <arg name="uav2_init_y" default="0"/>
+    <arg name="uav2_init_z" default="0"/>
+    <arg name="uav2_init_qx" default="0"/>
+    <arg name="uav2_init_qy" default="0"/>
+    <arg name="uav2_init_qz" default="1"/>
+    <arg name="uav2_init_qw" default="0"/>
+
+    <arg name="uav3_init_x" default="-8"/>
+    <arg name="uav3_init_y" default="-0"/>
+    <arg name="uav3_init_z" default="0"/>
+    <arg name="uav3_init_qx" default="0"/>
+    <arg name="uav3_init_qy" default="0"/>
+    <arg name="uav3_init_qz" default="0"/>
+    <arg name="uav3_init_qw" default="1"/>
+
+    <!-- MAVROS posix SITL environment launch script -->
+    <!-- launches Gazebo environment and 2x: MAVROS, PX4 SITL, and spawns vehicle -->
+    <!-- vehicle model and world -->
+    <arg name="est" default="ekf2"/>
+    <arg name="vehicle" default="iris_D435i"/>
+    <!-- <arg name="world" default="$(find mavlink_sitl_gazebo)/worlds/empty.world"/> -->
+    <arg name="world" default="$(find plan_manager)/worlds/pedestrians_dense.world"/>
+    <!-- <arg name="world" default="$(find rast_corridor_planning)/worlds/forest.world"/> -->
+    <!-- gazebo configs -->
+    <arg name="gui" default="true"/>
+    <arg name="debug" default="false"/>
+    <arg name="verbose" default="false"/>
+    <arg name="paused" default="false"/>
+    <!-- Gazebo sim -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="world_name" value="$(arg world)"/>
+        <arg name="debug" value="$(arg debug)"/>
+        <arg name="verbose" value="$(arg verbose)"/>
+        <arg name="paused" value="$(arg paused)"/>
+    </include>
+    <!-- UAV0 -->
+    <group ns="uav0">
+        <!-- MAVROS and vehicle configs -->
+        <arg name="ID" value="0"/>
+        <arg name="fcu_url" default="udp://:14540@localhost:14580"/>
+        <!-- PX4 SITL and vehicle spawn -->
+        <include file="$(find px4)/launch/single_vehicle_spawn_revised.launch">
+            <arg name="x" value="$(arg uav0_init_x)"/>
+            <arg name="y" value="$(arg uav0_init_y)"/>
+            <arg name="z" value="$(arg uav0_init_z)"/>
+            <arg name="R" value="0"/>
+            <arg name="P" value="0"/>
+            <arg name="Y" value="0"/>
+            <arg name="vehicle" value="$(arg vehicle)"/>
+            <arg name="mavlink_udp_port" value="14560"/>
+            <arg name="mavlink_tcp_port" value="4560"/>
+            <arg name="ID" value="$(arg ID)"/>
+            <arg name="gst_udp_port" value="$(eval 5600 + arg('ID'))"/>
+            <arg name="video_uri" value="$(eval 5600 + arg('ID'))"/>
+            <arg name="mavlink_cam_udp_port" value="$(eval 14530 + arg('ID'))"/>
+        </include>
+        <!-- MAVROS -->
+        <include file="$(find mavros)/launch/px4.launch">
+            <arg name="fcu_url" value="$(arg fcu_url)"/>
+            <arg name="gcs_url" value=""/>
+            <arg name="tgt_system" value="$(eval 1 + arg('ID'))"/>
+            <arg name="tgt_component" value="1"/>
+        </include>
+        <include file="$(find traj_server)/launch/odom_local2global.launch">
+            <arg name="init_x" value="$(arg uav0_init_x)"/>"
+            <arg name="init_y" value="$(arg uav0_init_y)"/>"
+            <arg name="init_z" value="$(arg uav0_init_z)"/>"
+            <arg name="init_qx" value="$(arg uav0_init_qx)"/>"
+            <arg name="init_qy" value="$(arg uav0_init_qy)"/>"
+            <arg name="init_qz" value="$(arg uav0_init_qz)"/>"
+            <arg name="init_qw" value="$(arg uav0_init_qw)"/>"
+        </include>
+    </group>
+    <!-- UAV1 -->
+    <group ns="uav1">
+        <!-- MAVROS and vehicle configs -->
+        <arg name="ID" value="1"/>
+        <arg name="fcu_url" default="udp://:14541@localhost:14581"/>
+        <!-- PX4 SITL and vehicle spawn -->
+        <include file="$(find px4)/launch/single_vehicle_spawn_revised.launch">
+            <arg name="x" value="$(arg uav1_init_x)"/>
+            <arg name="y" value="$(arg uav1_init_y)"/>
+            <arg name="z" value="$(arg uav1_init_z)"/>
+            <arg name="R" value="0"/>
+            <arg name="P" value="0"/>
+            <arg name="Y" value="0"/>
+            <arg name="vehicle" value="$(arg vehicle)"/>
+            <arg name="mavlink_udp_port" value="$(eval 14560 + arg('ID'))"/>
+            <arg name="mavlink_tcp_port" value="$(eval 4560 + arg('ID'))"/>
+            <arg name="ID" value="$(arg ID)"/>
+            <arg name="gst_udp_port" value="$(eval 5600 + arg('ID'))"/>
+            <arg name="video_uri" value="$(eval 5600 + arg('ID'))"/>
+            <arg name="mavlink_cam_udp_port" value="$(eval 14530 + arg('ID'))"/>
+        </include>
+        <!-- MAVROS -->
+        <include file="$(find mavros)/launch/px4.launch">
+            <arg name="fcu_url" value="$(arg fcu_url)"/>
+            <arg name="gcs_url" value=""/>
+            <arg name="tgt_system" value="$(eval 1 + arg('ID'))"/>
+            <arg name="tgt_component" value="1"/>
+        </include>
+        <include file="$(find traj_server)/launch/odom_local2global.launch">
+            <arg name="init_x" value="$(arg uav1_init_x)"/>"
+            <arg name="init_y" value="$(arg uav1_init_y)"/>"
+            <arg name="init_z" value="$(arg uav1_init_z)"/>"
+            <arg name="init_qx" value="$(arg uav1_init_qx)"/>"
+            <arg name="init_qy" value="$(arg uav1_init_qy)"/>"
+            <arg name="init_qz" value="$(arg uav1_init_qz)"/>"
+            <arg name="init_qw" value="$(arg uav1_init_qw)"/>"
+        </include>
+    </group>
+</launch>
+<!-- to add more UAVs (up to 10):
+Increase the id
+Change the name space
+Set the FCU to default="udp://:14540+id@localhost:14550+id"
+Set the malink_udp_port to 14560+id) -->

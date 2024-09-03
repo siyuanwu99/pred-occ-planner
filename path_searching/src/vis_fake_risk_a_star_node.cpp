@@ -16,7 +16,7 @@
 // #include <path_searching/risk_hybrid_a_star.h>
 #include <path_searching/fake_risk_hybrid_a_star.h>
 // #include <plan_env/risk_voxel.h>
-#include <plan_env/fake_dsp_map.h>
+// #include <plan_env/fake_dsp_map.h>
 #include <ros/ros.h>
 #include <visualization_msgs/Marker.h>
 
@@ -29,8 +29,8 @@ ros::Publisher  t_path_pub_;
 ros::Publisher  voxel_pub_;
 ros::Publisher  occupied_pub_;
 
-FakeRiskVoxel::Ptr       grid_map_;
-FakeRiskHybridAstar::Ptr a_star_;
+FakeParticleRiskVoxel::Ptr grid_map_;
+FakeRiskHybridAstar::Ptr   a_star_;
 
 Eigen::Vector3d              end_pos_, start_pos_, start_vel_;
 Eigen::Vector3d              end_vel_   = Eigen::Vector3d::Zero();
@@ -146,18 +146,18 @@ void clickCallback(const geometry_msgs::PoseStamped::ConstPtr &msg) {
   double delta_t = (t1 - tm).toSec();
   ROS_INFO("Time interval to last map updates: %f ms", delta_t * 1000);
   ASTAR_RET rst =
-      a_star_->search(start_pos_, start_vel_, start_acc_, end_pos_, end_vel_, true, true, delta_t);
+      a_star_->search(start_pos_, start_vel_, start_acc_, end_pos_, end_vel_, false, true, delta_t);
   auto t2 = ros::Time::now();
   ROS_INFO("Time used: %f ms", (t2 - t1).toSec() * 1000);
 
-  if (rst == 0) {
-    auto   t1      = ros::Time::now();
-    auto   tm      = grid_map_->getMapTime();
-    double delta_t = (t1 - tm).toSec();
-    a_star_->reset();
-    rst = a_star_->search(start_pos_, start_vel_, start_acc_, end_pos_, end_vel_, false, true,
-                          delta_t);
-  }
+  // if (rst == 0) {
+  //   auto   t1      = ros::Time::now();
+  //   auto   tm      = grid_map_->getMapTime();
+  //   double delta_t = (t1 - tm).toSec();
+  //   a_star_->reset();
+  //   rst = a_star_->search(start_pos_, start_vel_, start_acc_, end_pos_, end_vel_, false, true,
+  //                         delta_t);
+  // }
 
   std::vector<Eigen::Vector4d> visited_voxels  = a_star_->getTraversedObstacles();
   std::vector<Eigen::Vector4d> occupied_voxels = a_star_->getOccupiedObstacles();
@@ -200,7 +200,7 @@ int main(int argc, char **argv) {
 
   nh.getParam("sample_duration", sample_duration_);
 
-  grid_map_.reset(new FakeRiskVoxel());
+  grid_map_.reset(new FakeParticleRiskVoxel());
   grid_map_->init(nh);
   Eigen::Vector3f posf = start_pos_.cast<float>();
   grid_map_->setMapCenter(posf);

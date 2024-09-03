@@ -2,6 +2,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(traj_coordinator)
 set(CMAKE_BUILD_TYPE "Release")
+# set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 add_compile_options(-std=c++14)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -g -lpthread")
 
@@ -31,7 +32,12 @@ include_directories(
 # # Declare a C++ library
 add_library(${PROJECT_NAME}
   src/mader.cpp
+  src/rmader.cpp
+  src/particles.cpp
 )
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
+
+add_executable(test_publish src/test_publish.cpp)
+target_link_libraries(test_publish ${catkin_LIBRARIES} ${PROJECT_NAME})

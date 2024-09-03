@@ -1,0 +1,82 @@
+<launch>
+  <arg name="drone_id" default="1" />
+  <arg name="init_x" default="0"/>
+  <arg name="init_y" default="0"/>
+  <arg name="init_z" default="0"/>
+  <arg name="init_qx" default="0"/>
+  <arg name="init_qy" default="0"/>
+  <arg name="init_qz" default="0"/>
+  <arg name="init_qw" default="1"/>
+  <arg name="goal_x" default="3"/>
+  <arg name="goal_y" default="0"/>
+  <arg name="goal_z" default="1"/>
+  <arg name="map_size_x" default="10"/>
+  <arg name="map_size_y" default="10"/>
+  <arg name="map_size_z" default="6"/>
+  <arg name="num_robots" default="3" />
+  <arg name="replan_lookahead" default="0.2"/>
+
+  <arg name="ped1_pose" value="/pedestrian1/optitrack/pose"/>
+  <arg name="ped2_pose" value="/pedestrian2/optitrack/pose"/>
+  <arg name="ped3_pose" value="/pedestrian3/optitrack/pose"/>
+  <!-- <arg name="pose_topic" value="mavros/local_position/pose"/> -->
+  <arg name="pose_topic" value="mavros/local_position/pose"/>
+  <arg name="odom_topic" value="mavros/local_position/odom"/>
+  <arg name="cloud_topic" value="/drone1/depth/color/points" />
+  <arg name="is_pose_subscribed" value="true" />
+
+  <node pkg="plan_env" type="pedestrian_mapping" name="map" >
+    <remap from="~map/pose" to="$(arg pose_topic)" />
+    <remap from="/pedestrian1/optitrack/pose" to="$(arg ped1_pose)" />
+    <remap from="/pedestrian2/optitrack/pose" to="$(arg ped2_pose)" />
+    <remap from="/pedestrian3/optitrack/pose" to="$(arg ped3_pose)" />
+    <remap from="~map/future_risk" to="planner/map/future_risk" />
+    <remap from="~map/time" to="planner/map/time" />
+    <param name="map/booleans/sub_pose" value="$(arg is_pose_subscribed)" />
+    <rosparam file="$(find plan_env)/config/pedestrian.yaml" command="load" />
+  </node>
+
+  <node pkg="plan_manager" name="planner" type="baseline" >
+    <remap from="~pose" to="$(arg pose_topic)" />
+    <remap from="~odom" to="$(arg odom_topic)" />
+    <remap from="/broadcast_traj_to_planner" to="/broadcast_traj" />
+    <remap from="~map/odom" to="$(arg odom_topic)" />
+    <remap from="~map/pose" to="$(arg pose_topic)" />
+
+    <rosparam file="$(find plan_manager)/config/real_cfg.yaml" command="load" />
+    <param name="drone_id" value="$(arg drone_id)" />
+    <param name="is_odom_local" value="false"/>
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="init_qx" value="$(arg init_qx)" />
+    <param name="init_qy" value="$(arg init_qy)" />
+    <param name="init_qz" value="$(arg init_qz)" />
+    <param name="init_qw" value="$(arg init_qw)" />
+    <param name="use_preset_goal" value="true" />
+    <param name="goal_x" value="$(arg goal_x)" />
+    <param name="goal_y" value="$(arg goal_y)" />
+    <param name="goal_z" value="$(arg goal_z)" />
+    <param name="time_step" value="0.01" />
+    <param name="fsm/replan_start_time" value="$(arg replan_lookahead)" />
+    <param name="subscribe_pose" value="$(arg is_pose_subscribed)" />
+    <param name="map/booleans/sub_pose" value="$(arg is_pose_subscribed)" />
+    <param name="map/booleans/pub_spatio_temporal" value="false" />
+  </node>
+
+  <node pkg="traj_server" name="traj_server" type="bezier_traj_server" output="screen">
+    <remap from="~trajectory" to="planner/trajectory" />
+    <remap from="/position_cmd" to="planning/pos_cmd" />
+    <remap from="~odom" to="$(arg odom_topic)" />
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="init_qx" value="$(arg init_qx)" />
+    <param name="init_qy" value="$(arg init_qy)" />
+    <param name="init_qz" value="$(arg init_qz)" />
+    <param name="init_qw" value="$(arg init_qw)" />
+    <param name="tf" value="true" />
+    <param name="replan_threshold" value="$(arg replan_lookahead)" />
+  </node>
+
+</launch>

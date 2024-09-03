@@ -1,0 +1,48 @@
+<launch>
+  <arg name="drone_id" default="0" />
+  <arg name="init_x"/>
+  <arg name="init_y"/>
+  <arg name="init_z"/>
+  <arg name="init_qx" default="0"/>
+  <arg name="init_qy" default="0"/>
+  <arg name="init_qz" default="0"/>
+  <arg name="init_qw" default="1"/>
+  <arg name="goal_x"/>
+  <arg name="goal_y"/>
+  <arg name="goal_z"/>
+  <arg name="num_robots" default="1" />
+
+  <include file="$(find plan_manager)/launch/simulator/drone_colormap.launch">
+    <arg name="drone_id" value="$(arg drone_id)" />
+  </include>
+
+  <arg name="pose_topic" value="mavros/local_position/pose"/>
+  <arg name="odom_topic" value="mavros/local_position/odom"/>
+
+  <node pkg="poscmd_2_odom" name="poscmd_2_odom" type="poscmd_2_odom" output="screen">
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="init_qx" value="$(arg init_qx)" />
+    <param name="init_qy" value="$(arg init_qy)" />
+    <param name="init_qz" value="$(arg init_qz)" />
+    <param name="init_qw" value="$(arg init_qw)" />
+    <remap from="~command" to="controller/pos_cmd" />
+    <remap from="~odometry" to="$(arg odom_topic)" />
+    <remap from="~pose" to="$(arg pose_topic)" />
+  </node>
+
+  <!-- visualize drone odometry -->
+  <node pkg="odom_visualization" name="odom_visualization" type="odom_visualization" output="screen">
+    <remap from="~odom" to="$(arg odom_topic)" />
+    <param name="color/a" value="1.0" />
+    <param name="mesh_resource" value="file://$(find traj_server)/meshes/drone.mesh" />
+    <!-- <param name="color/r" value="$(arg color_r)" />
+    <param name="color/g" value="$(arg color_g)" />
+    <param name="color/b" value="$(arg color_b)" /> -->
+    <param name="covariance_scale" value="100.0" />
+    <param name="robot_scale" value="1.0" />
+    <param name="tf45" value="true" />
+    <param name="drone_id" value="$(arg drone_id)" />
+  </node>
+</launch>

@@ -1,3 +1,4 @@
 <launch>
-  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find planner)/rviz/sim_multi.rviz" />
+  <arg name="rviz" default="sim_multi"/>
+  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find plan_manager)/rviz/$(arg rviz).rviz" />
 </launch>

@@ -6,15 +6,18 @@ using namespace Eigen;
 AStar::~AStar() {
   for (int i = 0; i < POOL_SIZE_(0); i++)
     for (int j = 0; j < POOL_SIZE_(1); j++)
-      for (int k = 0; k < POOL_SIZE_(2); k++) delete GridNodeMap_[i][j][k];
+      for (int k = 0; k < POOL_SIZE_(2); k++)
+        delete GridNodeMap_[i][j][k];
 }
 
-void AStar::setParam(ros::NodeHandle &nh) {
+void AStar::setParam(ros::NodeHandle& nh) {
   tie_breaker_ = 1.0 + 1.0 / 10000;
-  resolution_  = 0.1;
+  resolution_ = 0.1;
 }
 
-void AStar::setEnvironment(const GridMap::Ptr &grid_map) { this->grid_map_ = grid_map; }
+void AStar::setEnvironment(const GridMap::Ptr& grid_map) {
+  this->grid_map_ = grid_map;
+}
 
 /**
  * @brief Initialize the Grid Map and allocate memory
@@ -22,12 +25,13 @@ void AStar::setEnvironment(const GridMap::Ptr &grid_map) { this->grid_map_ = gri
  * @param occ_map
  * @param pool_size
  */
-void AStar::initEnvironment(GridMap::Ptr occ_map, const Eigen::Vector3i pool_size) {
-  POOL_SIZE_   = pool_size;
-  CENTER_IDX_  = pool_size / 2;
-  GridNodeMap_ = new GridNodePtr **[POOL_SIZE_(0)];
+void AStar::initEnvironment(GridMap::Ptr occ_map,
+                            const Eigen::Vector3i pool_size) {
+  POOL_SIZE_ = pool_size;
+  CENTER_IDX_ = pool_size / 2;
+  GridNodeMap_ = new GridNodePtr**[POOL_SIZE_(0)];
   for (int i = 0; i < POOL_SIZE_(0); i++) {
-    GridNodeMap_[i] = new GridNodePtr *[POOL_SIZE_(1)];
+    GridNodeMap_[i] = new GridNodePtr*[POOL_SIZE_(1)];
     for (int j = 0; j < POOL_SIZE_(1); j++) {
       GridNodeMap_[i][j] = new GridNodePtr[POOL_SIZE_(2)];
       for (int k = 0; k < POOL_SIZE_(2); k++) {
@@ -41,11 +45,12 @@ void AStar::initEnvironment(GridMap::Ptr occ_map, const Eigen::Vector3i pool_siz
 
 void AStar::init() {
   inv_resolution_ = 1.0 / resolution_;
-  rounds_         = 0;
+  rounds_ = 0;
 }
 
-void AStar::init(const Eigen::Vector3d &map_center, const Eigen::Vector3i &map_size) {
-  map_center_     = map_center;
+void AStar::init(const Eigen::Vector3d& map_center,
+                 const Eigen::Vector3i& map_size) {
+  map_center_ = map_center;
   inv_resolution_ = 1.0 / resolution_;
   initEnvironment(grid_map_, map_size);
   rounds_ = 0;
@@ -53,7 +58,8 @@ void AStar::init(const Eigen::Vector3d &map_center, const Eigen::Vector3i &map_s
 
 void AStar::reset() {
   node_path_.clear();
-  std::priority_queue<GridNodePtr, std::vector<GridNodePtr>, NodeComparator> empty;
+  std::priority_queue<GridNodePtr, std::vector<GridNodePtr>, NodeComparator>
+      empty;
   open_set_.swap(empty);
 }
 
@@ -62,8 +68,8 @@ double AStar::getDiagHeu(GridNodePtr node1, GridNodePtr node2) {
   double dy = abs(node1->getIndex(1) - node2->getIndex(1));
   double dz = abs(node1->getIndex(2) - node2->getIndex(2));
 
-  double h    = 0.0;
-  int    diag = min(min(dx, dy), dz);
+  double h = 0.0;
+  int diag = min(min(dx, dy), dz);
   dx -= diag;
   dy -= diag;
   dz -= diag;
@@ -102,11 +108,12 @@ void AStar::retrievePath(GridNodePtr current) {
   reverse(node_path_.begin(), node_path_.end());
 }
 
-bool AStar::ConvertToIndexAndAdjustStartEndPoints(Vector3d  start_pt,
-                                                  Vector3d  end_pt,
-                                                  Vector3i &start_idx,
-                                                  Vector3i &end_idx) {
-  if (!pos2Index(start_pt, start_idx) || !pos2Index(end_pt, end_idx)) return false;
+bool AStar::ConvertToIndexAndAdjustStartEndPoints(Vector3d start_pt,
+                                                  Vector3d end_pt,
+                                                  Vector3i& start_idx,
+                                                  Vector3i& end_idx) {
+  if (!pos2Index(start_pt, start_idx) || !pos2Index(end_pt, end_idx))
+    return false;
 
   int occ;
   if (checkOccupancy(index2Pos(start_idx))) {
@@ -151,7 +158,8 @@ ASTAR_RET AStar::search(Vector3d start_pt, Vector3d end_pt) {
   ++rounds_;
 
   Vector3i start_idx, end_idx;
-  if (!ConvertToIndexAndAdjustStartEndPoints(start_pt, end_pt, start_idx, end_idx)) {
+  if (!ConvertToIndexAndAdjustStartEndPoints(start_pt, end_pt, start_idx,
+                                             end_idx)) {
     ROS_ERROR("Unable to handle the initial or end point, force return!");
     return ASTAR_RET::INIT_ERR;
   }
@@ -160,13 +168,14 @@ ASTAR_RET AStar::search(Vector3d start_pt, Vector3d end_pt) {
   //     cout << "start_pt=" << start_pt.transpose() << " end_pt=" << end_pt.transpose() << endl;
 
   GridNodePtr startPtr = GridNodeMap_[start_idx(0)][start_idx(1)][start_idx(2)];
-  GridNodePtr endPtr   = GridNodeMap_[end_idx(0)][end_idx(1)][end_idx(2)];
+  GridNodePtr endPtr = GridNodeMap_[end_idx(0)][end_idx(1)][end_idx(2)];
 
-  std::priority_queue<GridNodePtr, std::vector<GridNodePtr>, NodeComparator> empty;
+  std::priority_queue<GridNodePtr, std::vector<GridNodePtr>, NodeComparator>
+      empty;
   open_set_.swap(empty);
 
   GridNodePtr neighborPtr = NULL;
-  GridNodePtr current     = NULL;
+  GridNodePtr current = NULL;
 
   endPtr->setIndex(end_idx);
 
@@ -199,30 +208,35 @@ ASTAR_RET AStar::search(Vector3d start_pt, Vector3d end_pt) {
       retrievePath(current);
       return ASTAR_RET::REACH_END;
     }
-    current->setState(NODE_STATE::IN_CLOSE_SET);  // move current node from open set to closed set.
+    current->setState(
+        NODE_STATE::
+            IN_CLOSE_SET);  // move current node from open set to closed set.
 
     for (int dx = -1; dx <= 1; dx++)
       for (int dy = -1; dy <= 1; dy++)
         for (int dz = -1; dz <= 1; dz++) {
-          if (dx == 0 && dy == 0 && dz == 0) continue;
+          if (dx == 0 && dy == 0 && dz == 0)
+            continue;
 
           Vector3i neighborIdx;
           neighborIdx(0) = (current->getIndex)(0) + dx;
           neighborIdx(1) = (current->getIndex)(1) + dy;
           neighborIdx(2) = (current->getIndex)(2) + dz;
 
-          if (neighborIdx(0) < 1 || neighborIdx(0) >= POOL_SIZE_(0) - 1 || neighborIdx(1) < 1 ||
-              neighborIdx(1) >= POOL_SIZE_(1) - 1 || neighborIdx(2) < 1 ||
-              neighborIdx(2) >= POOL_SIZE_(2) - 1) {
+          if (neighborIdx(0) < 1 || neighborIdx(0) >= POOL_SIZE_(0) - 1 ||
+              neighborIdx(1) < 1 || neighborIdx(1) >= POOL_SIZE_(1) - 1 ||
+              neighborIdx(2) < 1 || neighborIdx(2) >= POOL_SIZE_(2) - 1) {
             continue;
           }
 
-          neighborPtr = GridNodeMap_[neighborIdx(0)][neighborIdx(1)][neighborIdx(2)];
+          neighborPtr =
+              GridNodeMap_[neighborIdx(0)][neighborIdx(1)][neighborIdx(2)];
           neighborPtr->setIndex(neighborIdx);
 
           bool flag_explored = neighborPtr->getRounds() == rounds_;
 
-          if (flag_explored && neighborPtr->getNodeState() == NODE_STATE::IN_CLOSE_SET) {
+          if (flag_explored &&
+              neighborPtr->getNodeState() == NODE_STATE::IN_CLOSE_SET) {
             continue;  // in closed set.
           }
 
@@ -233,24 +247,30 @@ ASTAR_RET AStar::search(Vector3d start_pt, Vector3d end_pt) {
           }
 
           double static_cost = sqrt(dx * dx + dy * dy + dz * dz);
-          tentative_gScore   = current->getGScore() + static_cost;
+          tentative_gScore = current->getGScore() + static_cost;
 
           if (!flag_explored) {
             // discover a new node
             neighborPtr->setNodeState(NODE_STATE::IN_OPEN_SET);
             neighborPtr->setParent(current);
             neighborPtr->setGScore(tentative_gScore);
-            neighborPtr->setFScore(tentative_gScore + estimateHeuristic(neighborPtr, endPtr));
-            open_set_.push(neighborPtr);  // put neighbor in open set and record it.
-          } else if (tentative_gScore < neighborPtr->getGScore()) {  // in open set and need update
+            neighborPtr->setFScore(tentative_gScore +
+                                   estimateHeuristic(neighborPtr, endPtr));
+            open_set_.push(
+                neighborPtr);  // put neighbor in open set and record it.
+          } else if (tentative_gScore <
+                     neighborPtr->getGScore()) {  // in open set and need update
             neighborPtr->setParent(current);
             neighborPtr->setGScore(tentative_gScore);
-            neighborPtr->setFScore(tentative_gScore + estimateHeuristic(neighborPtr, endPtr));
+            neighborPtr->setFScore(tentative_gScore +
+                                   estimateHeuristic(neighborPtr, endPtr));
           }
         }
     ros::Time time_2 = ros::Time::now();
     if ((time_2 - time_1).toSec() > 0.2) {
-      ROS_WARN("Failed in A star path searching !!! 0.2 seconds time limit exceeded.");
+      ROS_WARN(
+          "Failed in A star path searching !!! 0.2 seconds time limit "
+          "exceeded.");
       return ASTAR_RET::SEARCH_ERR;
     }
   }
@@ -258,8 +278,8 @@ ASTAR_RET AStar::search(Vector3d start_pt, Vector3d end_pt) {
   ros::Time time_2 = ros::Time::now();
 
   if ((time_2 - time_1).toSec() > 0.1)
-    ROS_WARN("Time consume in A star path finding is %.3fs, iter=%d", (time_2 - time_1).toSec(),
-             num_iter);
+    ROS_WARN("Time consume in A star path finding is %.3fs, iter=%d",
+             (time_2 - time_1).toSec(), num_iter);
 
   return ASTAR_RET::SEARCH_ERR;
 }
@@ -267,7 +287,8 @@ ASTAR_RET AStar::search(Vector3d start_pt, Vector3d end_pt) {
 vector<Vector3d> AStar::getPath() {
   vector<Vector3d> path;
 
-  for (auto ptr : node_path_) path.push_back(index2Pos(ptr->getIndex()));
+  for (auto ptr : node_path_)
+    path.push_back(index2Pos(ptr->getIndex()));
 
   return path;
 }

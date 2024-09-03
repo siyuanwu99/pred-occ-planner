@@ -1,0 +1,46 @@
+<launch>
+
+  <arg name="init_x" value="-5.0" />
+  <arg name="init_y" value="0.0" />
+  <arg name="init_z" value="1.0" />
+  <arg name="goal_x" value="25.0" />
+  <arg name="goal_y" value="0.0" />
+  <arg name="goal_z" value="1.0" />
+  <arg name="map_size_x" value="13" />
+  <arg name="map_size_y" value="13" />
+  <arg name="map_size_z" value="7" />
+  <arg name="num_robots" value="1" />
+  <arg name="is_pose_subscribed" value="true" />
+
+  <group ns="uav0">
+  <node pkg="plan_manager" name="planner" type="baseline" output="screen">
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="goal_x" value="$(arg goal_x)" />
+    <param name="goal_y" value="$(arg goal_y)" />
+    <param name="goal_z" value="$(arg goal_z)" />
+    <param name="time_step" value="0.01" />
+
+    <param name="is_pose_sub" value="$(arg is_pose_subscribed)" />
+    <rosparam file="$(find plan_manager)/config/sim_cfg.yaml" command="load" />
+
+    <!-- Topics -->
+    <remap from="~pose" to="/mavros/local_position/pose" />
+    <remap from="~map/odom" to="/odom" />
+    <remap from="~map/cloud" to="/camera_front/depth/points" />
+    <remap from="~map/pose" to="/mavros/local_position/pose" />
+    <remap from="~map/depth" to="/drone_depth_topic" />
+  </node>
+
+    <node pkg="traj_server" name="traj_server" type="bezier_traj_server" output="screen">
+        <remap from="~trajectory" to="planner/trajectory" />
+        <remap from="/position_cmd" to="controller/pos_cmd" />
+        <remap from="~odom" to="/mavros/local_position/pose" />
+        <param name="tf" value="true" />
+        <param name="replan_threshold" value="0.3" />
+    </node>
+</group>
+  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find plan_manager)/rviz/bag.rviz" />
+
+</launch>

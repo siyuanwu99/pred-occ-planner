@@ -10,6 +10,7 @@
  */
 
 #include <plan_env/map.h>
+#include <pcl/impl/point_types.hpp>
 
 void MapBase::loadParameters() {
   /* parameters */
@@ -23,6 +24,7 @@ void MapBase::loadParameters() {
   nh_.param("is_odom_local", is_odom_local_, false);
 
   nh_.param("map/booleans/sub_pose", is_pose_sub_, false);
+  nh_.param("map/pub_map_index", dbg_pub_map_index_, 0);
   nh_.param("map/booleans/pub_world_frame", if_pub_in_world_frame_, true);
   nh_.param("map/booleans/pub_spatio_temporal", if_pub_spatio_temporal_map_, false);
   nh_.param("map/resolution", filter_res_, 0.15F); /* resolution of the voxel filter */
@@ -30,16 +32,19 @@ void MapBase::loadParameters() {
   nh_.param("map/local_update_range_x", local_update_range_x_, 5.0F);
   nh_.param("map/local_update_range_y", local_update_range_y_, 5.0F);
   nh_.param("map/local_update_range_z", local_update_range_z_, 4.0F);
-  nh_.param("map/risk_threshold", risk_threshold_, 0.2F);
+  nh_.param("map/risk_threshold_voxel", risk_threshold_, 0.2F);
   nh_.param("map/clearance", clearance_, 0.3F);
+  nh_.param("map/ceiling_height", ceiling_height_, 2.0F);
+  nh_.param("map/ground_height", ground_height_, -1.0F);
+  nh_.param("map/corridor_safety_distance", safety_margin_, 0.4F);
 }
 
 void MapBase::init(ros::NodeHandle &nh) {
   nh_ = nh;
   loadParameters();
   resolution_           = VOXEL_RESOLUTION;
-  local_update_range_x_ = MAP_LENGTH_VOXEL_NUM / 2 * resolution_;
-  local_update_range_y_ = MAP_WIDTH_VOXEL_NUM / 2 * resolution_;
+  local_update_range_x_ = MAP_LENGTH_VOXEL_NUM / 2.f * resolution_;
+  local_update_range_y_ = MAP_WIDTH_VOXEL_NUM / 2.f * resolution_;
   local_update_range_z_ = MAP_HEIGHT_VOXEL_NUM / 2 * resolution_;
   ROS_INFO("[MAP_BASE] Local update range: %f, %f, %f", local_update_range_x_,
            local_update_range_y_, local_update_range_z_);
@@ -50,7 +55,7 @@ void MapBase::init(ros::NodeHandle &nh) {
   inflate_kernel_.reserve((2 * inf_step_ + 1) * (2 * inf_step_ + 1) * (2 * inf_step_ + 1));
   for (int x = -inf_step_; x <= inf_step_; x++) {
     for (int y = -inf_step_; y <= inf_step_; y++) {
-      for (int z = -inf_step_; z <= inf_step_; z++) {
+      for (int z = -0.45; z <= 0.45; z++) {
         inflate_kernel_.push_back(Eigen::Vector3i(x, y, z));
       }
     }
@@ -72,6 +77,8 @@ void MapBase::init(ros::NodeHandle &nh) {
   /* publishers */
   cloud_pub_    = nh.advertise<sensor_msgs::PointCloud2>("map/occupancy_inflated", 1, true);
   obstacle_pub_ = nh.advertise<sensor_msgs::PointCloud2>("vis_obstacle", 1, true);
+  // risk_pub_     = nh.advertise<std_msgs::Float32MultiArray>("map/risk", 1, true);
+  risk_pub_ = nh.advertise<sensor_msgs::PointCloud2>("map/risk_map", 1);
   /* publish point clouds in 20 Hz */
   pub_timer_ = nh.createTimer(ros::Duration(0.10), &MapBase::pubCallback, this);
 
@@ -80,6 +87,13 @@ void MapBase::init(ros::NodeHandle &nh) {
   /* initialize odometry */
   pose_ = Eigen::Vector3f::Zero();
   q_    = Eigen::Quaternionf::Identity();
+
+  /* initialize risk map by setting unknown voxels as 1 */
+  for (int i = 0; i < VOXEL_NUM; i++) {
+    for (int j = 0; j < PREDICTION_TIMES; j++) {
+      risk_maps_[i][j] = 1.0F;
+    }
+  }
 }
 
 /**
@@ -181,7 +195,7 @@ void MapBase::publishMap() {
         if (risk_maps_[i][j] > risk_threshold_) {
           pt.x = pos.x();
           pt.y = pos.y();
-          pt.z = j * time_resolution_;
+          pt.z = j * time_resolution_ + 0.5 * time_resolution_;
           cloud->points.push_back(pt);
         }
       }
@@ -190,7 +204,8 @@ void MapBase::publishMap() {
     for (int i = 0; i < VOXEL_NUM; i++) {
       Eigen::Vector3f pt = getVoxelPosition(i);
       pcl::PointXYZ   p;
-      if (risk_maps_[i][0] > risk_threshold_) {
+      dbg_pub_map_index_ = (dbg_pub_map_index_ > PREDICTION_TIMES - 1) ? 0 : dbg_pub_map_index_;
+      if (risk_maps_[i][dbg_pub_map_index_] > risk_threshold_) {
         p.x = pt[0];
         p.y = pt[1];
         p.z = pt[2];
@@ -199,12 +214,12 @@ void MapBase::publishMap() {
     }
   }
 
-  if (if_pub_in_world_frame_ && !if_pub_spatio_temporal_map_) {
-    Eigen::Affine3f transform = Eigen::Affine3f::Identity();
-    transform.translate(pose_);
-    // transform.rotate(q_);
-    pcl::transformPointCloud(*cloud, *cloud, transform);
-  }
+  // if (if_pub_in_world_frame_ && !if_pub_spatio_temporal_map_) {
+  //   Eigen::Affine3f transform = Eigen::Affine3f::Identity();
+  //   transform.translate(pose_);
+  //   // transform.rotate(q_);
+  //   pcl::transformPointCloud(*cloud, *cloud, transform);
+  // }
 
   sensor_msgs::PointCloud2 cloud_msg;
   pcl::toROSMsg(*cloud, cloud_msg);
@@ -215,6 +230,42 @@ void MapBase::publishMap() {
   // clock_t t2 = clock();
   // std::cout << "num_occupied: " << num_occupied << "\t" << std::endl;
   //           << "publish time (ms): " << (t2 - t1) * 1000 / (double)CLOCKS_PER_SEC << std::endl;
+  // std_msgs::Float32MultiArray   risk_msg;
+  // std_msgs::MultiArrayDimension risk_dim;
+  // risk_dim.size   = VOXEL_NUM;
+  // risk_dim.stride = PREDICTION_TIMES;
+  // risk_msg.layout.dim.push_back(risk_dim);
+  // risk_msg.data.reserve(VOXEL_NUM * PREDICTION_TIMES);
+  // for (int i = 0; i < VOXEL_NUM; i++) {
+  //   for (int j = 0; j < PREDICTION_TIMES; j++) {
+  //     risk_msg.data.push_back(risk_maps_[i][j]);
+  //   }
+  // }
+  // risk_pub_.publish(risk_msg);
+  pcl::PointCloud<pcl::PointXYZRGB> risk_cloud;
+  risk_cloud.points.reserve(VOXEL_NUM);
+  for (size_t i = 0; i < VOXEL_NUM; i++) {
+    Eigen::Vector3f pt = getVoxelPosition(i);
+    if (risk_maps_[i][0] <= 0) continue;  // filter out safe area
+    int color = 255 * (1 - risk_maps_[i][0]);
+    color     = (color > 255) ? 255 : color;
+    color     = (color < 0) ? 0 : color;
+    pcl::PointXYZRGB p;
+    p.x = pt[0];
+    p.y = pt[1];
+    p.z = pt[2];
+    p.r = color;
+    p.g = color;
+    p.b = color;
+    risk_cloud.push_back(p);
+  }
+  risk_cloud.width  = risk_cloud.points.size();
+  risk_cloud.height = 1;
+  sensor_msgs::PointCloud2 risk_cloud_msg;
+  pcl::toROSMsg(risk_cloud, risk_cloud_msg);
+  risk_cloud_msg.header.stamp    = ros::Time::now();
+  risk_cloud_msg.header.frame_id = "world";
+  risk_pub_.publish(risk_cloud_msg);
 }
 
 /**
@@ -418,7 +469,12 @@ void MapBase::getObstaclePoints(std::vector<Eigen::Vector3d> &points,
 
   int idx_start = floor((t_start - t0) / time_resolution_);
   int idx_end   = ceil((t_end - t0) / time_resolution_);
-  // std::cout << "idx_start" << idx_start << "idx_end" << idx_end << std::endl;
+  idx_start     = idx_start < 0 ? 0 : idx_start;
+  idx_start     = idx_start > PREDICTION_TIMES ? PREDICTION_TIMES : idx_start;
+  idx_end       = idx_end > PREDICTION_TIMES ? PREDICTION_TIMES : idx_end;
+  idx_end       = idx_end < 0 ? 0 : idx_end;
+
+  std::cout << "idx_start" << idx_start << "idx_end" << idx_end << std::endl;
   int lx = (lower_corner[0] - pose_.x() + local_update_range_x_) / resolution_;
   int ly = (lower_corner[1] - pose_.y() + local_update_range_y_) / resolution_;
   int lz = (lower_corner[2] - pose_.z() + local_update_range_z_) / resolution_;
@@ -442,7 +498,31 @@ void MapBase::getObstaclePoints(std::vector<Eigen::Vector3d> &points,
         int i = x + y * MAP_LENGTH_VOXEL_NUM + z * MAP_LENGTH_VOXEL_NUM * MAP_WIDTH_VOXEL_NUM;
         for (int j = idx_start; j <= idx_end; j++) {
           if (risk_maps_[i][j] > risk_threshold_) {
-            points.emplace_back(getVoxelPosition(i).cast<double>());
+            Eigen::Vector3d pt = getVoxelPosition(i).cast<double>();
+            points.emplace_back(pt);
+            // points.emplace_back(pt +
+            //                     Eigen::Vector3d(safety_margin_, safety_margin_, safety_margin_));
+            // points.emplace_back(pt +
+            //                     Eigen::Vector3d(safety_margin_, safety_margin_,
+            //                     -safety_margin_));
+            // points.emplace_back(pt +
+            //                     Eigen::Vector3d(safety_margin_, -safety_margin_,
+            //                     safety_margin_));
+            // points.emplace_back(pt +
+            //                     Eigen::Vector3d(safety_margin_, -safety_margin_,
+            //                     -safety_margin_));
+            // points.emplace_back(pt +
+            //                     Eigen::Vector3d(-safety_margin_, safety_margin_,
+            //                     safety_margin_));
+            // points.emplace_back(pt +
+            //                     Eigen::Vector3d(-safety_margin_, safety_margin_,
+            //                     -safety_margin_));
+            // points.emplace_back(pt +
+            //                     Eigen::Vector3d(-safety_margin_, -safety_margin_,
+            //                     safety_margin_));
+            // points.emplace_back(pt +
+            //                     Eigen::Vector3d(-safety_margin_, -safety_margin_,
+            //                     -safety_margin_));
           }
         }
       }

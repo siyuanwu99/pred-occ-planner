@@ -1,0 +1,74 @@
+<launch>
+
+  <arg name="init_x" value="-10.0" />
+  <arg name="init_y" value="0.0" />
+  <arg name="init_z" value="1.0" />
+  <arg name="map_size_x" value="13" />
+  <arg name="map_size_y" value="13" />
+  <arg name="map_size_z" value="7" />
+  <arg name="is_pose_subscribed" value="true" />
+
+  <node pkg="plan_env" name="risk_voxel" type="risk_voxel_node" output="screen">
+    <param name="is_odom_local" value="true" />
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="vel" value="1" />
+    <param name="time_step" value="0.01" />
+
+    <!-- Booleans -->
+    <param name="map/booleans/pub_world_frame" value="true" />
+    <param name="map/booleans/pub_spatio_temporal" value="false" />
+    <param name="map/booleans/sub_pose" value="$(arg is_pose_subscribed)" />
+    <param name="map/local_update_range_x" value="5.5" />
+    <param name="map/local_update_range_y" value="5.5" />
+    <param name="map/local_update_range_z" value="4.5" />
+    <!-- Topics -->
+    <remap from="~map/odom" to="/odom" />
+    <remap from="~map/cloud" to="/camera_front/depth/points" />
+    <remap from="~map/pose" to="/mavros/local_position/pose" />
+    <remap from="~map/depth" to="/drone_depth_topic" />
+
+    <!-- <param name="map/map_size_x" value="$(arg map_size_x)" />
+    <param name="map/map_size_y" value="$(arg map_size_y)" />
+    <param name="map/map_size_z" value="$(arg map_size_z)" /> -->
+    <param name="map/voxel_size_x" value="65" />
+    <param name="map/voxel_size_y" value="65" />
+    <param name="map/voxel_size_z" value="35" />
+    <!-- Resolutions -->
+    <param name="map/resolution" value="0.2" />
+    <!-- filter resolution -->
+    <param name="map/angle_resolution" value="3" />
+    <param name="map/time_resolution" value="0.2" />
+    <!-- Num particles -->
+    <param name="map/n_risk_map" value="3" />
+    <param name="map/n_prediction_per_risk" value="3" />
+    <param name="map/n_particles_max_per_voxel" value="18" />
+    <!-- Variances -->
+    <param name="map/stddev_pos" value="0.05" />
+    <param name="map/stddev_vel" value="0.05" />
+    <param name="map/sigma_update" value="0.1" />
+    <param name="map/sigma_observation" value="0.1" />
+    <param name="map/sigma_localization" value="0.00" />
+    <!-- Newborn particles -->
+    <param name="map/newborn/particles_weight" value="0.0001" />
+    <param name="map/newborn/particles_number" value="20" />
+    <param name="map/newborn/objects_weight" value="0.04" />
+    <!-- FOV settings -->
+    <param name="map/half_fov_horizontal" value="42" />
+    <param name="map/half_fov_vertical" value="24" />
+
+    <param name="map/obstacles_inflation" value="0.3" />
+    <param name="map/local_map_margin" value="10" />
+    <param name="map/ground_height" value="-0.01" />
+
+    <param name="map/virtual_ceil_height" value="2.9" />
+    <param name="map/visualization_truncate_height" value="1.8" />
+    <param name="map/show_occ_time" value="false" />
+    <param name="map/pose_type" value="1" />
+    <param name="map/frame_id" value="world" />
+  </node>
+
+  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find plan_env)/rviz/dynamic_map.rviz" />
+
+</launch>

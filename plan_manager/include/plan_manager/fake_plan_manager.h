@@ -45,20 +45,31 @@ enum PLAN_TYPE {
 };
 
 struct FSMParameters {
-  double goal_tolerance   = 1.0;
-  double replan_tolerance = 1.0;
-  double replan_duration  = 0.1;
+  double goal_tolerance    = 1.0;
+  double replan_tolerance  = 1.0;
+  double replan_duration   = 0.1;
+  double replan_start_time = 0.4;
+
+  int    replan_max_failures  = 3;
+  double colli_check_duration = 2.0;
 };
 
 class FiniteStateMachineFake {
  public:
-  FiniteStateMachineFake(ros::NodeHandle &nh) : _nh(nh) {}
+  FiniteStateMachineFake(ros::NodeHandle &nh1,
+                         ros::NodeHandle &nh2,
+                         ros::NodeHandle &nh3,
+                         ros::NodeHandle &nh4)
+      : nh1_(nh1), nh2_(nh2), nh3_(nh3), nh4_(nh4) {}
   ~FiniteStateMachineFake() = default;
 
   void run();
 
   void FSMCallback(const ros::TimerEvent &event);
   void TriggerCallback(const geometry_msgs::PoseStampedPtr &msg);
+  void PoseCallback(const geometry_msgs::PoseStampedPtr &msg);
+  void clickCallback(const geometry_msgs::PoseStamped::ConstPtr &msg);
+  void visCallback(const ros::TimerEvent &event);
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
@@ -67,9 +78,8 @@ class FiniteStateMachineFake {
   void FSMChangeState(FSM_STATUS new_state);
 
   void publishTrajectory();
+  void publishEmptyTrajectory();
 
-  // bool localReplan(PLAN_TYPE type);
-  // bool globalPlan();
   bool setLocalGoal();
   bool executeTrajectory();
   bool isTrajectorySafe();
@@ -80,40 +90,48 @@ class FiniteStateMachineFake {
   inline bool isInputLost();
   inline bool checkTimeLapse(double time);
 
-  FSM_STATUS    _status;
-  FSMParameters _cfgs;
+  FSM_STATUS    status_;
+  FSMParameters cfgs_;
 
-  int    _drone_id;
-  int    _traj_idx;
-  double _time;
+  int drone_id_;
+  int traj_idx_;
+  int num_replan_failures_;
 
   /********** BOOLEANS **********/
-  bool _is_map_updated;
-  bool _is_future_risk_locked;
-  bool _is_safety_mode_enabled;
-  bool _is_local_frame;
-  bool _is_state_locked;
-  bool _is_exec_triggered;
-  bool _is_odom_received;
-  bool _is_velocity_received;
-  bool _is_goal_received;
+  bool is_map_updated_;
+  bool is_future_risk_locked_;
+  bool is_safety_mode_enabled_;
+  bool is_local_frame_;
+  bool is_state_locked_;
+  bool is_exec_triggered_;
+  bool is_odom_received_;
+  bool is_velocity_received_;
+  bool is_goal_preset_;
+  bool is_goal_received_;
+  bool is_success_;
 
   /* ROS */
-  ros::NodeHandle _nh;
-  ros::Subscriber _trigger_sub;
-  ros::Timer      _fsm_timer;
-  ros::Publisher  _traj_pub, _broadcast_traj_pub;
+  ros::NodeHandle nh1_, nh2_, nh3_, nh4_;
+  ros::Subscriber trigger_sub_, click_sub_, pose_sub_, swarm_traj_sub_;
+  ros::Timer      fsm_timer_, vis_timer_;
+  ros::Publisher  traj_pub_, broadcast_traj_pub_;
 
-  ros::Time _traj_start_time;
-  ros::Time _prev_plan_time;
+  ros::Time traj_start_time_;
 
   /* planner */
-  FakeBaselinePlanner::Ptr _planner;
+  FakeBaselinePlanner::Ptr planner_;
+
+  /* odometry */
+  Eigen::Vector3d    odom_pos_;      /** quadrotor's current position */
+  Eigen::Vector3d    odom_vel_;      /** quadrotor's current velocity */
+  Eigen::Vector3d    odom_acc_;      /** quadrotor's current acceleration */
+  Eigen::Quaterniond odom_att_;      /** quadrotor's current attitude as a quaternion */
+  Eigen::Vector3d    goal_pos_;      /** quadrotor's goal position */
+  Eigen::Vector3d    prev_odom_pos_; /** quadrotor's previous position */
+  Eigen::Vector3d    prev_odom_vel_; /** quadrotor's previous velocity */
 
   /* trajectory */
-  Eigen::Vector3d             _goal;
-  Eigen::Vector3d             _odom_pos;
-  std::queue<Eigen::Vector3d> _waypoints;
+  std::queue<Eigen::Vector3d> waypoints_;
 };
 
 /********** INLINE FUNCTIONS **********/
@@ -126,7 +144,7 @@ class FiniteStateMachineFake {
  * @return false
  */
 inline bool FiniteStateMachineFake ::isGoalReached(const Eigen::Vector3d &p) {
-  return ((p - _goal).norm() < _cfgs.goal_tolerance) ? true : false;
+  return ((p - goal_pos_).norm() < cfgs_.goal_tolerance) ? true : false;
 }
 
 /**
@@ -134,11 +152,7 @@ inline bool FiniteStateMachineFake ::isGoalReached(const Eigen::Vector3d &p) {
  * @return true   no update
  * @return false
  */
-inline bool FiniteStateMachineFake::isInputLost() {
-  _is_map_updated   = _planner->getMapStatus();
-  _is_odom_received = _planner->getOdomStatus();
-  return !_is_map_updated || !_is_odom_received;
-}
+inline bool FiniteStateMachineFake::isInputLost() { return !is_odom_received_; }
 
 /**
  * @brief read drone ID from the ros node handle
@@ -152,7 +166,7 @@ inline int FiniteStateMachineFake::getDroneID() {
 }
 
 inline bool FiniteStateMachineFake::checkTimeLapse(double time) {
-  double elapsed = ros::Time::now().toSec() - _prev_plan_time.toSec();
+  double elapsed = ros::Time::now().toSec() - traj_start_time_.toSec();
   return (elapsed > time);
 }
 

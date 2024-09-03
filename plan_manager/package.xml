@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>planner</name>
+  <name>plan_manager</name>
   <version>0.0.0</version>
   <description>The plan_manager package</description>
 

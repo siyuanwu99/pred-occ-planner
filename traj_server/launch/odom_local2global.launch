@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+  <env name="ROSCONSOLE_FORMAT" value="[${node}][${severity}]:${message}"/>
+  <arg name="init_x" default="0"/>
+  <arg name="init_y" default="0"/>
+  <arg name="init_z" default="0"/>
+  <arg name="init_qx" default="0"/>
+  <arg name="init_qy" default="0"/>
+  <arg name="init_qz" default="0"/>
+  <arg name="init_qw" default="1"/>
+    <node pkg="traj_server" type="odom_local2global" name="odom_local2global">
+        <param name="init_x" value="$(arg init_x)" />
+        <param name="init_y" value="$(arg init_y)" />
+        <param name="init_z" value="$(arg init_z)" />
+        <param name="init_qx" value="$(arg init_qx)" />
+        <param name="init_qy" value="$(arg init_qy)" />
+        <param name="init_qz" value="$(arg init_qz)" />
+        <param name="init_qw" value="$(arg init_qw)" />
+        <remap from="~local_odom" to="mavros/local_position/odom" />
+        <remap from="~local_pose" to="mavros/local_position/pose" />
+        <remap from="~global_odom" to="mavros/global_position/odom" />
+        <remap from="~global_pose" to="mavros/global_position/pose" />
+    </node>
+</launch>

@@ -1,0 +1,62 @@
+<launch>
+  <env name="ROSCONSOLE_FORMAT" value="[${node}][${time:%H:%M:%S%F}][${severity}]:${message}"/>
+  <arg name="map_size_x" value="20" />
+  <arg name="map_size_y" value="20" />
+  <arg name="map_size_z" value="6" />
+  <arg name="obs_num" default="5" />
+  <!-- Number of obstacles -->
+  <arg name="num_robots" value="10" />
+  <arg name="rviz" default="True" />
+
+  <include file="$(find plan_manager)/launch/simulator/simulator_hitl.launch">
+    <arg name="map_mode" value="0" />
+    <arg name="map_size_x" value="$(arg map_size_x)" />
+    <arg name="map_size_y" value="$(arg map_size_y)" />
+    <arg name="map_size_z" value="$(arg map_size_z)" />
+    <arg name="obs_num" value="$(arg obs_num)" />
+  </include>
+
+  <group ns="drone1">
+    <include file="$(find plan_manager)/launch/real/comm_test_gcs.launch">
+      <arg name="drone_id" value="1" />
+      <arg name="num_robots" value="$(arg num_robots)" />
+      <arg name="init_x" value="-10" />
+      <arg name="init_y" value="0" />
+      <arg name="init_z" value="1" />
+      <arg name="goal_x" value="10" />
+      <arg name="goal_y" value="-0" />
+      <arg name="goal_z" value="1" />
+    </include>
+  </group>
+
+  <group ns="drone2">
+    <include file="$(find plan_manager)/launch/real/comm_test_gcs.launch">
+      <arg name="drone_id" value="2" />
+      <arg name="num_robots" value="$(arg num_robots)" />
+      <arg name="init_x" value="-10" />
+      <arg name="init_y" value="-4" />
+      <arg name="init_z" value="1" />
+      <arg name="goal_x" value="10" />
+      <arg name="goal_y" value="4" />
+      <arg name="goal_z" value="1" />
+    </include>
+  </group>
+
+  <group ns="drone3">
+    <include file="$(find plan_manager)/launch/real/comm_test_gcs.launch">
+      <arg name="drone_id" value="3" />
+      <arg name="num_robots" value="$(arg num_robots)" />
+      <arg name="init_x" value="-10" />
+      <arg name="init_y" value="4" />
+      <arg name="init_z" value="1" />
+      <arg name="goal_x" value="10" />
+      <arg name="goal_y" value="-4" />
+      <arg name="goal_z" value="1" />
+    </include>
+  </group>
+
+  <group if="$(arg rviz)">
+    <node pkg="rviz" name="rviz" type="rviz" args="-d $(find plan_manager)/rviz/hitl.rviz" />
+  </group>
+
+</launch>

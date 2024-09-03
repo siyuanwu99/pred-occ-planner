@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="init_x" value="0.0" />
+  <arg name="init_y" value="0.0" />
+  <arg name="init_z" value="1.0" />
+  <arg name="map_size_x" value="16" />
+  <arg name="map_size_y" value="16" />
+  <arg name="map_size_z" value="7" />
+
+  <node pkg="path_searching" name="astar" type="risk_a_star_node" output="screen">
+    <param name="mode" value="0" /> <!-- 0: click, 1: timer  -->
+    <param name="is_odom_local" value="true" />
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+
+    <!-- <remap from="~map/odom" to="/odom" /> -->
+    <!-- <remap from="~map/cloud" to="/camera_front/depth/points" /> -->
+    <!-- <remap from="~map/pose" to="/mavros/local_position/pose" /> -->
+    <!-- <remap from="~map/depth" to="/drone_depth_topic" /> -->
+    <!-- <remap from="~astar/odom" to="/uav0/mavros/local_position/odom" /> -->
+
+    <remap from="~map/odom" to="/odom" />
+    <remap from="~map/cloud" to="/iris_D435i0/depth/color/points" />
+    <remap from="~map/pose" to="/uav0/mavros/global_position/pose" />
+    <remap from="~map/depth" to="/drone_depth_topic" />
+    <remap from="~astar/odom" to="/uav0/mavros/global_position/odom" />
+
+    <!-- Booleans -->
+    <param name="map/booleans/pub_world_frame" value="true" />
+    <param name="map/booleans/pub_spatio_temporal" value="false" />
+    <param name="map/booleans/sub_pose" value="true" />
+    <!-- Resolutions -->
+    <param name="map/resolution" value="0.10" />
+    <param name="map/risk_threshold" value="0.10" />
+    <param name="map/local_update_range_x" value="5.5" />
+    <param name="map/local_update_range_y" value="5.5" />
+    <param name="map/local_update_range_z" value="4.5" />
+    <param name="map/time_resolution" value="0.2" />
+    <param name="map/sigma_observation" value="0.1" />
+    <param name="map/sigma_localization" value="0.00" />
+    <param name= "map/booleans/pub_spatio_temporal" value="true" />
+
+    <param name="search/is_test" value="true" />
+    <param name="search/max_tau" value="1.8" type="double"/>
+    <param name="search/init_max_tau" value="0.8" type="double"/>
+    <param name="search/max_vel" value="2" type="double"/>
+    <param name="search/max_acc" value="3" type="double"/>
+    <param name="search/w_time" value="10.0" type="double"/>
+    <param name="search/horizon" value="7.0" type="double"/>
+    <param name="search/lambda_heu" value="5.0" type="double"/>
+    <param name="search/resolution_astar" value="0.1" type="double"/>
+    <param name="search/time_resolution" value="0.8" type="double"/>
+    <param name="search/margin" value="0.2" type="double"/>
+    <param name="search/allocate_num" value="100000" type="int"/>
+    <param name="search/check_num" value="5" type="int"/>
+  </node>
+
+  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find path_searching)/rviz/astar_gazebo.rviz" />
+
+  <node pkg="path_searching" name="click" type="publish_click.py" >
+    <remap from="input_pose" to="/uav0/mavros/global_position/pose" />
+    <remap from="output_click" to="/move_base_simple/goal" />
+  </node>
+
+</launch>

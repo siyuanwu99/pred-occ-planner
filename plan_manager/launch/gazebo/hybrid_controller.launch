@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<launch>
+  <env name="ROSCONSOLE_FORMAT" value="[${node}][${severity}]:${message}"/>
+  <!-- start node -->
+  <arg name="nr" default="1" />
+
+  <group ns="uav0">
+    <node pkg="pva_tracker" 
+            name="tracker" 
+            type="tracker_sim" 
+            output="screen">
+      <remap from="pva_setpoint" to="tracker/pva_cmd" />
+      <remap from="mavros/local_position/pose" to="mavros/global_position/pose" />
+      <remap from="mavros/local_position/odom" to="mavros/global_position/odom" />
+    </node>
+  </group>
+
+  <group ns="uav1">
+    <node pkg="pva_tracker" 
+            name="tracker" 
+            type="tracker_sim" 
+            output="screen">
+      <remap from="pva_setpoint" to="tracker/pva_cmd" />
+      <remap from="mavros/local_position/pose" to="mavros/global_position/pose" />
+      <remap from="mavros/local_position/odom" to="mavros/global_position/odom" />
+    </node>
+  </group>
+
+  <!-- <group ns="uav2"> -->
+  <!--   <node pkg="pva_tracker"  -->
+  <!--           name="tracker"  -->
+  <!--           type="tracker_sim"  -->
+  <!--           output="screen"> -->
+  <!--     <remap from="pva_setpoint" to="tracker/pva_cmd" /> -->
+  <!--     <remap from="mavros/local_position/pose" to="mavros/global_position/pose" /> -->
+  <!--     <remap from="mavros/local_position/odom" to="mavros/global_position/odom" /> -->
+  <!--   </node> -->
+  <!-- </group> -->
+  <!---->
+  <!---->
+  <!-- <group ns="uav3"> -->
+  <!--   <node pkg="pva_tracker"  -->
+  <!--           name="tracker"  -->
+  <!--           type="tracker_sim"  -->
+  <!--           output="screen"> -->
+  <!--     <remap from="pva_setpoint" to="tracker/pva_cmd" /> -->
+  <!--     <remap from="mavros/local_position/pose" to="mavros/global_position/pose" /> -->
+  <!--     <remap from="mavros/local_position/odom" to="mavros/global_position/odom" /> -->
+  <!--   </node> -->
+  <!-- </group> -->
+
+</launch>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+  <env name="ROSCONSOLE_FORMAT" value="[${node}][${severity}]:${message}"/>
+
+  <group ns="uav0">
+	  <node pkg="px4ctrl" type="px4ctrl_node" name="px4ctrl" output="screen">
+		  <remap from="odom" to="mavros/local_position/odom" />
+		  <remap from="cmd" to="tracker/pos_cmd" />
+  	  <rosparam command="load" file="$(find px4ctrl)/config/ctrl_param_gazebo.yaml" />
+	  </node>
+  </group>
+
+  <group ns="uav1">
+	  <node pkg="px4ctrl" type="px4ctrl_node" name="px4ctrl" output="screen">
+		  <remap from="odom" to="mavros/local_position/odom" />
+		  <remap from="cmd" to="tracker/pos_cmd" />
+  	  <rosparam command="load" file="$(find px4ctrl)/config/ctrl_param_gazebo.yaml" />
+	  </node>
+  </group>
+
+ 	 <node pkg="px4ctrl" type="takeoff.sh" 
+    	name="takeoff" output="screen">
+	</node>
+</launch>

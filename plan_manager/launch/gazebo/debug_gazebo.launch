@@ -1,0 +1,5 @@
+<launch>
+
+  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find plan_manager)/rviz/debug_gazebo.rviz" />
+
+</launch>

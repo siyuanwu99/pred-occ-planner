@@ -20,7 +20,7 @@
 
 
   <!-- Assign color to the drone -->
-  <include file="$(find planner)/launch/simulator/drone_colormap.launch">
+  <include file="$(find plan_manager)/launch/simulator/drone_colormap.launch">
     <arg name="drone_id" value="$(arg drone_id)" />
   </include>
 
@@ -28,9 +28,9 @@
   <arg name="odom_topic" value="mavros/local_position/odom"/>
   <arg name="is_pose_subscribed" value="false" />
 
-  <!-- <node pkg="planner" name="planner" type="baseline" output="screen"> -->
+  <!-- <node pkg="plan_manager" name="planner" type="baseline" output="screen"> -->
       <node 
-          pkg="planner" 
+          pkg="plan_manager" 
           name="planner" type="fake_baseline" 
           launch-prefix="terminator -\-execute gdb -ex run -\-args" 
           output="screen">
@@ -41,7 +41,7 @@
     <remap from="~map/pose" to="$(arg pose_topic)" />
     <remap from="~map/state" to="/ground_truth_state" />
     <!-- Map ground truth statet -->
-    <rosparam file="$(find planner)/config/sim_fake.yaml" command="load" />
+    <rosparam file="$(find plan_manager)/config/sim_fake.yaml" command="load" />
     <param name="drone_id" value="$(arg drone_id)" />
     <param name="swarm/num_robots" value="$(arg num_robots)" />
     <param name="init_x" value="$(arg init_x)" />
@@ -60,6 +60,13 @@
     <remap from="/position_cmd" to="controller/pos_cmd" />
     <remap from="~odom" to="$(arg pose_topic)" />
     <param name="tf" value="true" />
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="init_qx" value="$(arg init_qx)" />
+    <param name="init_qy" value="$(arg init_qy)" />
+    <param name="init_qz" value="$(arg init_qz)" />
+    <param name="init_qw" value="$(arg init_qw)" />
     <param name="replan_time_threshold" value="1.2" />
   </node>
 

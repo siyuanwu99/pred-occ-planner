@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="drone_id" default="0" />
+  <arg name="init_x" default="0"/>
+  <arg name="init_y" default="0"/>
+  <arg name="init_z" default="0"/>
+  <arg name="init_qx" default="0"/>
+  <arg name="init_qy" default="0"/>
+  <arg name="init_qz" default="0"/>
+  <arg name="init_qw" default="1"/>
+  <arg name="goal_x"/>
+  <arg name="goal_y"/>
+  <arg name="goal_z"/>
+  <arg name="map_size_x"/>
+  <arg name="map_size_y"/>
+  <arg name="map_size_z"/>
+  <arg name="replan_lookahead" default="0.02"/>  <!-- where replan starts, should be less than 0.3 -->
+
+  <arg name="pose_topic" value="mavros/local_position/pose"/>
+  <arg name="odom_topic" value="mavros/local_position/odom"/>
+  <arg name="is_pose_subscribed" value="false" />
+
+  <!-- FAKE PERCEPTION -->
+  <node pkg="map_generator" type="pcl_render_node" name="perception" >
+      <param name="sensing_horizon" value="5.0" />
+      <param name="sensing_rate" value="10.0" />
+
+      <param name="global_map/x_size" value="$(arg map_size_x)" />
+      <param name="global_map/y_size" value="$(arg map_size_y)" />
+      <param name="global_map/z_size" value="$(arg map_size_z)" />
+      <param name="global_map/resolution" value="0.1" />
+
+      <remap from="~future_risk" to="/map_generator/future_risk" />
+      <remap from="~odometry" to="$(arg odom_topic)" />
+      <remap from="~map/future_risk" to="/uav$(arg drone_id)/planner/map/future_risk" />
+      <remap from="~map/time" to="/uav$(arg drone_id)/planner/map/time" />
+  </node>
+
+  <!-- PLANNER -->
+  <node pkg="plan_manager" name="planner" type="baseline" >
+    <!-- Topics -->
+    <remap from="~pose" to="$(arg pose_topic)" />
+    <remap from="~odom" to="$(arg odom_topic)" />
+    <remap from="/broadcast_traj_to_planner" to="/broadcast_traj" />
+    <remap from="~map/odom" to="$(arg odom_topic)" />
+    <remap from="~map/pose" to="$(arg pose_topic)" />
+    
+    <!-- PARAMS -->
+    <rosparam file="$(find plan_manager)/config/sim_neo.yaml" command="load" />
+    <param name="drone_id" value="$(arg drone_id)" />
+    <param name="is_odom_local" value="false"/>
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="init_qx" value="$(arg init_qx)" />
+    <param name="init_qy" value="$(arg init_qy)" />
+    <param name="init_qz" value="$(arg init_qz)" />
+    <param name="init_qw" value="$(arg init_qw)" />
+    <param name="use_preset_goal" value="true" />
+    <param name="goal_x" value="$(arg goal_x)" />
+    <param name="goal_y" value="$(arg goal_y)" />
+    <param name="goal_z" value="$(arg goal_z)" />
+    <!-- <param name="time_step" value="0.01" /> -->
+    <param name="fsm/replan_start_time" value="$(arg replan_lookahead)" />
+    <param name="subscribe_pose" value="$(arg is_pose_subscribed)" />
+    <param name="map/booleans/sub_pose" value="$(arg is_pose_subscribed)" />
+    <param name="map/booleans/pub_spatio_temporal" value="false" />
+  </node>
+
+  <node pkg="traj_server" name="traj_server" type="bezier_traj_server" >
+    <remap from="~trajectory" to="planner/trajectory" />
+    <remap from="/position_cmd" to="controller/pos_cmd" />
+    <remap from="~pose" to="$(arg pose_topic)" />
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="init_qx" value="$(arg init_qx)" />
+    <param name="init_qy" value="$(arg init_qy)" />
+    <param name="init_qz" value="$(arg init_qz)" />
+    <param name="init_qw" value="$(arg init_qw)" />
+    <param name="tf" value="true" />
+    <param name="replan_threshold" value="$(arg replan_lookahead)" />
+  </node>
+
+  <!-- FAKE CONTROLLER + ODOMETRY -->
+  <node pkg="poscmd_2_odom" name="poscmd_2_odom" type="poscmd_2_odom" output="screen">
+    <param name="init_x" value="$(arg init_x)" />
+    <param name="init_y" value="$(arg init_y)" />
+    <param name="init_z" value="$(arg init_z)" />
+    <param name="init_qx" value="$(arg init_qx)" />
+    <param name="init_qy" value="$(arg init_qy)" />
+    <param name="init_qz" value="$(arg init_qz)" />
+    <param name="init_qw" value="$(arg init_qw)" />
+    <remap from="~command" to="controller/pos_cmd" />
+    <remap from="~odometry" to="$(arg odom_topic)" />
+    <remap from="~pose" to="$(arg pose_topic)" />
+  </node>
+
+  <!-- VISUALIZATION -->
+
+  <node pkg="traj_server" name="color_traj" type="color_traj">
+    <remap from="~bezier_traj" to="planner/trajectory" />
+    <remap from="~color_traj" to="planner/color_traj" />
+    <param name="max_vel" value="2.5" />
+    <param name="alpha" value="1.0" />
+  </node>
+
+  <node pkg="odom_visualization" name="odom_visualization" type="odom_visualization" output="screen">
+    <remap from="~odom" to="$(arg odom_topic)" />
+    <param name="color/a" value="1.0" />
+    <param name="mesh_resource" value="file://$(find odom_visualization)/meshes/mantis.dae" />
+    <param name="color/r" value="0.0" />
+    <param name="color/g" value="0.0" />
+    <param name="color/b" value="0.0" />
+    <param name="covariance_scale" value="100.0" />
+    <param name="robot_scale" value="0.002" />
+    <param name="tf45" value="true" />
+    <param name="drone_id" value="$(arg drone_id)" />
+  </node>
+
+</launch>

@@ -12,12 +12,15 @@
 #define MAP_H
 #include <ros/ros.h>
 #include <Eigen/Dense>
+#include <algorithm>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <pcl/common/transforms.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
 #include <pcl_conversions/pcl_conversions.h>
 
 #include <geometry_msgs/PoseStamped.h>
@@ -26,7 +29,9 @@
 #include <message_filters/sync_policies/exact_time.h>
 #include <message_filters/time_synchronizer.h>
 #include <nav_msgs/Odometry.h>
-#include "map_parameters.h"  // MAP PARAMETRES
+#include <plan_env/map_parameters.h>  // MAP PARAMETRES
+#include <sensor_msgs/PointCloud2.h>
+#include <std_msgs/Float32MultiArray.h>
 
 class MapBase {
  protected:
@@ -51,6 +56,7 @@ class MapBase {
   bool  if_pub_spatio_temporal_map_;
   bool  if_pub_in_world_frame_;
   bool  is_odom_local_;
+  int   dbg_pub_map_index_;
   float resolution_;
   float time_resolution_;
   float local_update_range_x_;
@@ -67,6 +73,9 @@ class MapBase {
   float filter_res_;
   float risk_threshold_;
   float clearance_;
+  float ceiling_height_;
+  float ground_height_;
+  float safety_margin_;
   int   inf_step_;
 
   std::vector<Eigen::Vector3i> inflate_kernel_;
@@ -76,15 +85,6 @@ class MapBase {
   ros::Subscriber odom_sub_;
   ros::Subscriber pose_sub_;
   ros::Subscriber cloud_sub_;
-
-  /* Utilities */
-  inline bool            isInRange(const Eigen::Vector3f &p) const;
-  inline bool            isInRange(const Eigen::Vector3i &p) const;
-  inline int             getVoxelIndex(const Eigen::Vector3f &pos) const;
-  inline int             getVoxelIndex(const Eigen::Vector3i &pos) const;
-  inline Eigen::Vector3f getVoxelPosition(int index) const;
-  inline Eigen::Vector3f getVoxelRelPosition(int index) const;
-  inline Eigen::Vector3i getVoxelRelIndex(const Eigen::Vector3f &pos) const;
 
  public:
   MapBase() {}
@@ -135,6 +135,15 @@ class MapBase {
   void addObstacles(const std::vector<Eigen::Vector3d> &centers,
                     const Eigen::Vector3d              &size,
                     const ros::Time                    &t);
+
+  /* Utilities */
+  inline bool            isInRange(const Eigen::Vector3f &p) const;
+  inline bool            isInRange(const Eigen::Vector3i &p) const;
+  inline int             getVoxelIndex(const Eigen::Vector3f &pos) const;
+  inline int             getVoxelIndex(const Eigen::Vector3i &pos) const;
+  inline Eigen::Vector3f getVoxelPosition(int index) const;
+  inline Eigen::Vector3f getVoxelRelPosition(int index) const;
+  inline Eigen::Vector3i getVoxelRelIndex(const Eigen::Vector3f &pos) const;
 
   typedef std::shared_ptr<MapBase> Ptr;
 };
@@ -190,9 +199,9 @@ inline Eigen::Vector3f MapBase::getVoxelPosition(int index) const {
  * @param pos index in global frame
  */
 inline Eigen::Vector3i MapBase::getVoxelRelIndex(const Eigen::Vector3f &pos) const {
-  int x = (pos[0] + local_update_range_x_) / resolution_;
-  int y = (pos[1] + local_update_range_y_) / resolution_;
-  int z = (pos[2] + local_update_range_z_) / resolution_;
+  int x = static_cast<int>((pos[0] + local_update_range_x_) / resolution_);
+  int y = static_cast<int>((pos[1] + local_update_range_y_) / resolution_);
+  int z = static_cast<int>((pos[2] + local_update_range_z_) / resolution_);
   return Eigen::Vector3i(x, y, z);
 }
 

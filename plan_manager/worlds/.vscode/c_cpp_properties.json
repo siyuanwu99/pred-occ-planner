@@ -1,0 +1,44 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/siyuan/workspace/thesis_workspace/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/thesis_planner/utils/DecompROS/decomp_ros_utils/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/DSP-map/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/thesis_planner/eval_helper/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/uav_simulator/map_generator/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/mav_comm/mav_msgs/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/mav_comm/mav_planning_msgs/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/uav_simulator/mockamap/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/uav_simulator/multi_map_server/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/thesis_planner/path_searching/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/thesis_planner/plan_env/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/thesis_planner/plan_manager/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/uav_simulator/pose_utils/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/uav_simulator/quadrotor_msgs/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/thesis_planner/RAST_corridor_planning/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/thesis_planner/utils/separator/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/uav_simulator/so3_control/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/uav_simulator/so3_quadrotor_simulator/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/thesis_planner/swarm_bridge/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/thesis_planner/traj_coordinator/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/thesis_planner/traj_opt/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/thesis_planner/traj_server/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/thesis_planner/traj_utils/include/**",
+        "/home/siyuan/workspace/thesis_workspace/src/uav_simulator/uav_utils/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

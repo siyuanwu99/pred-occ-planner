@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<launch>
+        <arg name="init_x" />
+        <arg name="init_y" />
+        <arg name="init_z" />
+        <arg name="obs_num" default="1" />
+        <arg name="map_size_x" />
+        <arg name="map_size_y" />
+        <arg name="map_size_z" />
+        <arg name="map_mode" default="0" />
+        <arg name="c_num" />
+        <arg name="p_num" />
+        <arg name="min_dist" />
+        <arg name="odometry_topic" />
+        <arg name="odom_pose_topic" />
+        <arg name="drone_id" />
+        <arg name="seed" default="0"/>
+
+	<!-- map -->
+        <node pkg ="map_generator" name ="map_generator" type ="random_env" output = "screen">
+                <param name="sensing/rate"   value="10.0"/>   
+                <param name="map/x_size"     value="$(arg map_size_x)" />
+                <param name="map/y_size"     value="$(arg map_size_y)" />
+                <param name="map/z_size"     value="$(arg map_size_z)" />
+                <param name="map/resolution" value="0.1"/>        
+                <param name="map/frame_id"   value="world" />
+                <param name="map/seed"       value="$(arg seed)"/>
+                <param name="map/obs_num"    value="20"/>
+                <param name="map/future_num" value="6"/>
+                <param name="map/time_step"  value="0.3"/>
+
+                <!-- <param name="obstacle/upper_vel" value="1.5"/> -->
+                <!---->
+                <!-- <param name="aabb/num" value="0"/> -->
+                <!-- <param name="aabb/lower_x" value="0.5"/> -->
+                <!-- <param name="aabb/upper_x" value="2.0"/> -->
+                <!-- <param name="aabb/lower_y" value="0.5"/> -->
+                <!-- <param name="aabb/upper_y" value="2.5"/>         -->
+                <!-- <param name="aabb/lower_z" value="0.5"/> -->
+                <!-- <param name="aabb/upper_z" value="2.5"/>         -->
+                <!---->
+                <!-- <param name="cylinder/num" value="0"/> -->
+                <!-- <param name="cylinder/lower_rad" value="0.2"/> -->
+                <!-- <param name="cylinder/upper_rad" value="0.5"/> -->
+                <!-- <param name="cylinder/lower_hei" value="4.0"/> -->
+                <!-- <param name="cylinder/upper_hei" value="4.0"/>         -->
+                <!---->
+                <!-- <param name="circlegate/num" value="0"/>         -->
+                <!-- <param name="circlegate/radius_l" value="1.7"/>         -->
+                <!-- <param name="circlegate/radius_h" value="2.5"/>         -->
+                <!-- <param name="circlegate/thickness" value="0.3"/>         -->
+                <!-- <param name="circlegate/dr" value="0.3"/>         -->
+                <!-- <param name="circlegate/theta" value="1.2"/>         -->
+                <!---->
+                <!-- <param name="pcd/num" value="3" /> -->
+                <!-- <param name="pcd/path" value="$(find map_generator)/data/text.pcd" /> -->
+
+
+                <param name="obstacle/upper_vel" value="1.0"/>
+
+                <param name="aabb/num" value="5"/>
+                <param name="aabb/lower_x" value="0.5"/>
+                <param name="aabb/upper_x" value="1.5"/>
+                <param name="aabb/lower_y" value="0.5"/>
+                <param name="aabb/upper_y" value="1.5"/>        
+                <param name="aabb/lower_z" value="0.5"/>
+                <param name="aabb/upper_z" value="1.5"/>        
+
+                <param name="cylinder/num" value="8"/>
+                <param name="cylinder/lower_rad" value="0.3"/>
+                <param name="cylinder/upper_rad" value="0.5"/>
+                <param name="cylinder/lower_hei" value="4.0"/>
+                <param name="cylinder/upper_hei" value="4.0"/>        
+
+                <param name="circlegate/num" value="7"/>        
+                <param name="circlegate/radius_l" value="1.7"/>        
+                <param name="circlegate/radius_h" value="2.5"/>        
+                <param name="circlegate/thickness" value="0.3"/>        
+                <param name="circlegate/dr" value="0.3"/>        
+                <param name="circlegate/theta" value="1.2"/>        
+
+                <param name="pcd/num" value="0" />
+                <param name="pcd/path" value="$(find map_generator)/data/text.pcd" />
+
+
+                <!-- <param name="obstacle/upper_vel" value="1.0"/> -->
+                <!---->
+                <!-- <param name="aabb/num" value="5"/> -->
+                <!-- <param name="aabb/lower_x" value="0.5"/> -->
+                <!-- <param name="aabb/upper_x" value="1.5"/> -->
+                <!-- <param name="aabb/lower_y" value="0.5"/> -->
+                <!-- <param name="aabb/upper_y" value="1.5"/>         -->
+                <!-- <param name="aabb/lower_z" value="0.5"/> -->
+                <!-- <param name="aabb/upper_z" value="1.5"/>         -->
+                <!---->
+                <!-- <param name="cylinder/num" value="5"/> -->
+                <!-- <param name="cylinder/lower_rad" value="0.3"/> -->
+                <!-- <param name="cylinder/upper_rad" value="0.5"/> -->
+                <!-- <param name="cylinder/lower_hei" value="4.0"/> -->
+                <!-- <param name="cylinder/upper_hei" value="4.0"/>         -->
+                <!---->
+                <!-- <param name="circlegate/num" value="5"/>         -->
+                <!-- <param name="circlegate/radius_l" value="1.7"/>         -->
+                <!-- <param name="circlegate/radius_h" value="2.5"/>         -->
+                <!-- <param name="circlegate/thickness" value="0.3"/>         -->
+                <!-- <param name="circlegate/dr" value="0.3"/>         -->
+                <!-- <param name="circlegate/theta" value="1.2"/>         -->
+                <!---->
+                <!-- <param name="pcd/num" value="0" /> -->
+                <!-- <param name="pcd/path" value="$(find map_generator)/data/text.pcd" /> -->
+        </node>
+
+</launch>

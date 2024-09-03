@@ -16,9 +16,9 @@ Panels:
         - /drone51
         - /drone61
         - /drone71
-        - /drone71/Simulation1/FOV1
+        - /MarkerArray1
       Splitter Ratio: 0.43611112236976624
-    Tree Height: 699
+    Tree Height: 719
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -137,13 +137,13 @@ Visualization Manager:
               Queue Size: 100
               Value: false
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav0/planner/vis_mesh
               Name: CrdMesh
               Namespaces:
                 {}
               Queue Size: 100
-              Value: true
+              Value: false
             - Alpha: 1
               Autocompute Intensity Bounds: true
               Autocompute Value Bounds:
@@ -217,13 +217,13 @@ Visualization Manager:
         - Class: rviz/Group
           Displays:
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav0/planner/vis_fov
               Name: FOV
               Namespaces:
-                lines_and_points: true
+                {}
               Queue Size: 100
-              Value: true
+              Value: false
             - Class: rviz/Marker
               Enabled: true
               Marker Topic: /uav0/odom_visualization/robot
@@ -289,7 +289,7 @@ Visualization Manager:
               Marker Topic: /uav1/planner/vis_astar_path
               Name: AStar
               Namespaces:
-                {}
+                astar_path: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -297,7 +297,7 @@ Visualization Manager:
               Marker Topic: /uav1/planner/vis_start_goal
               Name: goal_point
               Namespaces:
-                {}
+                StartGoal: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -317,13 +317,13 @@ Visualization Manager:
               Queue Size: 100
               Value: false
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav1/planner/vis_mesh
               Name: CrdMesh
               Namespaces:
                 {}
               Queue Size: 100
-              Value: true
+              Value: false
             - Class: rviz/Marker
               Enabled: false
               Marker Topic: /uav1/planner/vis_ctrl_pts
@@ -369,13 +369,13 @@ Visualization Manager:
         - Class: rviz/Group
           Displays:
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav1/planner/vis_fov
               Name: FOV
               Namespaces:
-                lines_and_points: true
+                {}
               Queue Size: 100
-              Value: true
+              Value: false
             - Class: rviz/Marker
               Enabled: true
               Marker Topic: /uav1/odom_visualization/robot
@@ -385,18 +385,18 @@ Visualization Manager:
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav1/traj_server/vis_traj
               Name: TrajQueue
               Namespaces:
                 {}
               Queue Size: 100
-              Value: true
+              Value: false
             - Alpha: 1
               Buffer Length: 1
               Class: rviz/Path
               Color: 240; 157; 216
-              Enabled: true
+              Enabled: false
               Head Diameter: 0.30000001192092896
               Head Length: 0.20000000298023224
               Length: 0.30000001192092896
@@ -415,7 +415,7 @@ Visualization Manager:
               Shaft Length: 0.10000000149011612
               Topic: /uav1/odom_visualization/path
               Unreliable: false
-              Value: true
+              Value: false
           Enabled: true
           Name: Simulation
       Enabled: true
@@ -429,7 +429,7 @@ Visualization Manager:
               Marker Topic: /uav2/planner/vis_astar_path
               Name: AStar
               Namespaces:
-                {}
+                astar_path: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -437,7 +437,7 @@ Visualization Manager:
               Marker Topic: /uav2/planner/vis_start_goal
               Name: goal_point
               Namespaces:
-                {}
+                StartGoal: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -457,13 +457,13 @@ Visualization Manager:
               Queue Size: 100
               Value: false
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav2/planner/vis_mesh
               Name: CrdMesh
               Namespaces:
                 {}
               Queue Size: 100
-              Value: true
+              Value: false
             - Class: rviz/Marker
               Enabled: false
               Marker Topic: /uav2/planner/vis_ctrl_pts
@@ -537,13 +537,13 @@ Visualization Manager:
         - Class: rviz/Group
           Displays:
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav2/planner/vis_fov
               Name: FOV
               Namespaces:
-                lines_and_points: true
+                {}
               Queue Size: 100
-              Value: true
+              Value: false
             - Class: rviz/Marker
               Enabled: true
               Marker Topic: /uav2/odom_visualization/robot
@@ -637,7 +637,7 @@ Visualization Manager:
               Marker Topic: /uav3/planner/vis_astar_path
               Name: AStar
               Namespaces:
-                {}
+                astar_path: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -645,7 +645,7 @@ Visualization Manager:
               Marker Topic: /uav3/planner/vis_start_goal
               Name: goal_point
               Namespaces:
-                {}
+                StartGoal: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -665,13 +665,13 @@ Visualization Manager:
               Queue Size: 100
               Value: false
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav3/planner/vis_mesh
               Name: CrdMesh
               Namespaces:
                 {}
               Queue Size: 100
-              Value: true
+              Value: false
             - Class: rviz/Marker
               Enabled: false
               Marker Topic: /uav3/planner/vis_ctrl_pts
@@ -745,13 +745,13 @@ Visualization Manager:
         - Class: rviz/Group
           Displays:
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav3/planner/vis_fov
               Name: FOV
               Namespaces:
-                lines_and_points: true
+                {}
               Queue Size: 100
-              Value: true
+              Value: false
             - Class: rviz/Marker
               Enabled: true
               Marker Topic: /uav3/odom_visualization/robot
@@ -845,7 +845,7 @@ Visualization Manager:
               Marker Topic: /uav4/planner/vis_astar_path
               Name: AStar
               Namespaces:
-                {}
+                astar_path: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -853,15 +853,15 @@ Visualization Manager:
               Marker Topic: /uav4/planner/vis_start_goal
               Name: goal_point
               Namespaces:
-                {}
+                StartGoal: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav4/planner/vis_mesh
               Name: CrdMesh
               Namespaces:
-                {}
+                mesh: true
               Queue Size: 100
               Value: true
           Enabled: true
@@ -901,13 +901,13 @@ Visualization Manager:
         - Class: rviz/Group
           Displays:
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav4/planner/vis_fov
               Name: FOV
               Namespaces:
-                lines_and_points: true
+                {}
               Queue Size: 100
-              Value: true
+              Value: false
             - Class: rviz/Marker
               Enabled: true
               Marker Topic: /uav4/odom_visualization/robot
@@ -961,7 +961,7 @@ Visualization Manager:
               Marker Topic: /uav5/planner/vis_astar_path
               Name: AStar
               Namespaces:
-                {}
+                astar_path: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -969,15 +969,15 @@ Visualization Manager:
               Marker Topic: /uav5/planner/vis_start_goal
               Name: goal_point
               Namespaces:
-                {}
+                StartGoal: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav5/planner/vis_mesh
               Name: CrdMesh
               Namespaces:
-                {}
+                mesh: true
               Queue Size: 100
               Value: true
           Enabled: true
@@ -1057,13 +1057,13 @@ Visualization Manager:
               Unreliable: false
               Value: true
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav5/planner/vis_fov
               Name: FOV
               Namespaces:
-                lines_and_points: true
+                {}
               Queue Size: 100
-              Value: true
+              Value: false
           Enabled: true
           Name: Simulation
       Enabled: true
@@ -1077,7 +1077,7 @@ Visualization Manager:
               Marker Topic: /uav6/planner/vis_astar_path
               Name: AStar
               Namespaces:
-                {}
+                astar_path: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -1085,15 +1085,15 @@ Visualization Manager:
               Marker Topic: /uav6/planner/vis_start_goal
               Name: goal_point
               Namespaces:
-                {}
+                StartGoal: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav6/planner/vis_mesh
               Name: CrdMesh
               Namespaces:
-                {}
+                mesh: true
               Queue Size: 100
               Value: true
           Enabled: true
@@ -1137,7 +1137,7 @@ Visualization Manager:
               Marker Topic: /uav6/odom_visualization/robot
               Name: robot
               Namespaces:
-                {}
+                mesh: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -1173,13 +1173,13 @@ Visualization Manager:
               Unreliable: false
               Value: true
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav6/planner/vis_fov
               Name: FOV
               Namespaces:
                 {}
               Queue Size: 100
-              Value: true
+              Value: false
           Enabled: true
           Name: Simulation
       Enabled: true
@@ -1193,7 +1193,7 @@ Visualization Manager:
               Marker Topic: /uav7/planner/vis_astar_path
               Name: AStar
               Namespaces:
-                {}
+                astar_path: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -1201,15 +1201,15 @@ Visualization Manager:
               Marker Topic: /uav7/planner/vis_start_goal
               Name: goal_point
               Namespaces:
-                {}
+                StartGoal: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav7/planner/vis_mesh
               Name: CrdMesh
               Namespaces:
-                {}
+                mesh: true
               Queue Size: 100
               Value: true
           Enabled: true
@@ -1253,7 +1253,7 @@ Visualization Manager:
               Marker Topic: /uav7/odom_visualization/robot
               Name: robot
               Namespaces:
-                {}
+                mesh: true
               Queue Size: 100
               Value: true
             - Class: rviz/Marker
@@ -1289,13 +1289,13 @@ Visualization Manager:
               Unreliable: false
               Value: true
             - Class: rviz/Marker
-              Enabled: true
+              Enabled: false
               Marker Topic: /uav7/planner/vis_fov
               Name: FOV
               Namespaces:
                 {}
               Queue Size: 100
-              Value: true
+              Value: false
           Enabled: true
           Name: Simulation
       Enabled: true
@@ -1336,6 +1336,467 @@ Visualization Manager:
         "": true
       Queue Size: 100
       Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /uav0/planner/color_traj
+      Name: MarkerArray
+      Namespaces:
+        drone1: true
+        drone10: true
+        drone11: true
+        drone12: true
+        drone13: true
+        drone14: true
+        drone15: true
+        drone16: true
+        drone17: true
+        drone18: true
+        drone19: true
+        drone2: true
+        drone20: true
+        drone21: true
+        drone22: true
+        drone23: true
+        drone24: true
+        drone25: true
+        drone26: true
+        drone27: true
+        drone28: true
+        drone29: true
+        drone3: true
+        drone30: true
+        drone31: true
+        drone32: true
+        drone33: true
+        drone34: true
+        drone35: true
+        drone36: true
+        drone37: true
+        drone38: true
+        drone39: true
+        drone4: true
+        drone40: true
+        drone41: true
+        drone42: true
+        drone43: true
+        drone44: true
+        drone45: true
+        drone46: true
+        drone47: true
+        drone48: true
+        drone49: true
+        drone5: true
+        drone50: true
+        drone51: true
+        drone52: true
+        drone53: true
+        drone6: true
+        drone7: true
+        drone8: true
+        drone9: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /uav1/planner/color_traj
+      Name: MarkerArray
+      Namespaces:
+        drone1: true
+        drone10: true
+        drone11: true
+        drone12: true
+        drone13: true
+        drone14: true
+        drone15: true
+        drone16: true
+        drone17: true
+        drone18: true
+        drone19: true
+        drone2: true
+        drone20: true
+        drone21: true
+        drone22: true
+        drone23: true
+        drone24: true
+        drone25: true
+        drone26: true
+        drone27: true
+        drone28: true
+        drone29: true
+        drone3: true
+        drone30: true
+        drone31: true
+        drone32: true
+        drone33: true
+        drone34: true
+        drone35: true
+        drone36: true
+        drone37: true
+        drone38: true
+        drone39: true
+        drone4: true
+        drone40: true
+        drone41: true
+        drone42: true
+        drone43: true
+        drone44: true
+        drone5: true
+        drone6: true
+        drone7: true
+        drone8: true
+        drone9: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /uav2/planner/color_traj
+      Name: MarkerArray
+      Namespaces:
+        drone1: true
+        drone10: true
+        drone11: true
+        drone12: true
+        drone13: true
+        drone14: true
+        drone15: true
+        drone16: true
+        drone17: true
+        drone18: true
+        drone19: true
+        drone2: true
+        drone20: true
+        drone21: true
+        drone22: true
+        drone23: true
+        drone24: true
+        drone25: true
+        drone26: true
+        drone27: true
+        drone28: true
+        drone29: true
+        drone3: true
+        drone30: true
+        drone31: true
+        drone32: true
+        drone33: true
+        drone34: true
+        drone35: true
+        drone36: true
+        drone37: true
+        drone38: true
+        drone39: true
+        drone4: true
+        drone40: true
+        drone41: true
+        drone42: true
+        drone43: true
+        drone44: true
+        drone45: true
+        drone46: true
+        drone47: true
+        drone48: true
+        drone49: true
+        drone5: true
+        drone50: true
+        drone6: true
+        drone7: true
+        drone8: true
+        drone9: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /uav3/planner/color_traj
+      Name: MarkerArray
+      Namespaces:
+        drone1: true
+        drone10: true
+        drone11: true
+        drone12: true
+        drone13: true
+        drone14: true
+        drone15: true
+        drone16: true
+        drone17: true
+        drone18: true
+        drone19: true
+        drone2: true
+        drone20: true
+        drone21: true
+        drone22: true
+        drone23: true
+        drone24: true
+        drone25: true
+        drone26: true
+        drone27: true
+        drone28: true
+        drone29: true
+        drone3: true
+        drone30: true
+        drone31: true
+        drone32: true
+        drone33: true
+        drone34: true
+        drone35: true
+        drone36: true
+        drone37: true
+        drone38: true
+        drone39: true
+        drone4: true
+        drone40: true
+        drone41: true
+        drone42: true
+        drone43: true
+        drone44: true
+        drone45: true
+        drone46: true
+        drone47: true
+        drone48: true
+        drone49: true
+        drone5: true
+        drone50: true
+        drone51: true
+        drone52: true
+        drone6: true
+        drone7: true
+        drone8: true
+        drone9: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /uav4/planner/color_traj
+      Name: MarkerArray
+      Namespaces:
+        drone1: true
+        drone10: true
+        drone11: true
+        drone12: true
+        drone13: true
+        drone14: true
+        drone15: true
+        drone16: true
+        drone17: true
+        drone18: true
+        drone19: true
+        drone2: true
+        drone20: true
+        drone21: true
+        drone22: true
+        drone23: true
+        drone24: true
+        drone25: true
+        drone26: true
+        drone27: true
+        drone28: true
+        drone29: true
+        drone3: true
+        drone30: true
+        drone31: true
+        drone32: true
+        drone33: true
+        drone34: true
+        drone35: true
+        drone36: true
+        drone37: true
+        drone38: true
+        drone39: true
+        drone4: true
+        drone40: true
+        drone41: true
+        drone42: true
+        drone43: true
+        drone44: true
+        drone45: true
+        drone46: true
+        drone47: true
+        drone5: true
+        drone6: true
+        drone7: true
+        drone8: true
+        drone9: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /uav5/planner/color_traj
+      Name: MarkerArray
+      Namespaces:
+        drone1: true
+        drone10: true
+        drone11: true
+        drone12: true
+        drone13: true
+        drone14: true
+        drone15: true
+        drone16: true
+        drone17: true
+        drone18: true
+        drone19: true
+        drone2: true
+        drone20: true
+        drone21: true
+        drone22: true
+        drone23: true
+        drone24: true
+        drone25: true
+        drone26: true
+        drone27: true
+        drone28: true
+        drone29: true
+        drone3: true
+        drone30: true
+        drone31: true
+        drone32: true
+        drone33: true
+        drone34: true
+        drone35: true
+        drone36: true
+        drone37: true
+        drone38: true
+        drone39: true
+        drone4: true
+        drone40: true
+        drone41: true
+        drone42: true
+        drone43: true
+        drone44: true
+        drone45: true
+        drone46: true
+        drone47: true
+        drone48: true
+        drone49: true
+        drone5: true
+        drone50: true
+        drone51: true
+        drone52: true
+        drone53: true
+        drone54: true
+        drone6: true
+        drone7: true
+        drone8: true
+        drone9: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /uav6/planner/color_traj
+      Name: MarkerArray
+      Namespaces:
+        drone1: true
+        drone10: true
+        drone11: true
+        drone12: true
+        drone13: true
+        drone14: true
+        drone15: true
+        drone16: true
+        drone17: true
+        drone18: true
+        drone19: true
+        drone2: true
+        drone20: true
+        drone21: true
+        drone22: true
+        drone23: true
+        drone24: true
+        drone25: true
+        drone26: true
+        drone27: true
+        drone28: true
+        drone29: true
+        drone3: true
+        drone30: true
+        drone31: true
+        drone32: true
+        drone33: true
+        drone34: true
+        drone35: true
+        drone36: true
+        drone37: true
+        drone38: true
+        drone39: true
+        drone4: true
+        drone40: true
+        drone41: true
+        drone42: true
+        drone43: true
+        drone44: true
+        drone45: true
+        drone46: true
+        drone47: true
+        drone48: true
+        drone49: true
+        drone5: true
+        drone50: true
+        drone51: true
+        drone52: true
+        drone6: true
+        drone7: true
+        drone8: true
+        drone9: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /uav7/planner/color_traj
+      Name: MarkerArray
+      Namespaces:
+        drone1: true
+        drone10: true
+        drone11: true
+        drone12: true
+        drone13: true
+        drone14: true
+        drone15: true
+        drone16: true
+        drone17: true
+        drone18: true
+        drone19: true
+        drone2: true
+        drone20: true
+        drone21: true
+        drone22: true
+        drone23: true
+        drone24: true
+        drone25: true
+        drone26: true
+        drone27: true
+        drone28: true
+        drone29: true
+        drone3: true
+        drone30: true
+        drone31: true
+        drone32: true
+        drone33: true
+        drone34: true
+        drone35: true
+        drone36: true
+        drone37: true
+        drone38: true
+        drone39: true
+        drone4: true
+        drone40: true
+        drone41: true
+        drone42: true
+        drone43: true
+        drone44: true
+        drone45: true
+        drone46: true
+        drone47: true
+        drone48: true
+        drone49: true
+        drone5: true
+        drone50: true
+        drone51: true
+        drone52: true
+        drone53: true
+        drone6: true
+        drone7: true
+        drone8: true
+        drone9: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
@@ -1364,20 +1825,20 @@ Visualization Manager:
     Current:
       Class: jsk_rviz_plugin/TabletViewController
       Control Mode: Orbit
-      Distance: 33.24822998046875
+      Distance: 35.908409118652344
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Eye:
-        X: -0.5864511132240295
-        Y: -1.2344940900802612
-        Z: 22.88896942138672
+        X: 0.7376483082771301
+        Y: -8.230213165283203
+        Z: 24.363147735595703
       Focus:
-        X: -0.6834589242935181
-        Y: 0.4070390462875366
-        Z: -10.318572998046875
+        X: -0.1569710373878479
+        Y: 1.664046287536621
+        Z: -10.143619537353516
       Invert Z Axis: false
       Maintain Vertical Axis: true
       Mouse Enabled: true
@@ -1429,11 +1890,11 @@ Visualization Manager:
         Yaw: 3.1431772708892822
 Window Geometry:
   Displays:
-    collapsed: false
-  Height: 1324
-  Hide Left Dock: false
+    collapsed: true
+  Height: 1356
+  Hide Left Dock: true
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000015b000004cefc0200000028fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005d00fffffffb0000001e0054006f006f006c002000500072006f0070006500720074006900650073020000056d0000024500000213000001f3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003f000002fb000000cc00fffffffb0000000a005600690065007700730100000340000001cd000000a900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d00650072006100000001d1000000b50000000000000000fb0000000a0049006d00610067006502000005000000039800000280000001e0fb0000000a006400650070007400680000000244000002310000001700fffffffb0000000a0049006d0061006700650100000415000000f80000000000000000fb0000000a0049006d00610067006501000003f4000001190000000000000000fb0000000a0064006500700074006800000004a2000000ac0000001700fffffffb0000000a0064006500700074006800000003b4000001b60000001700fffffffb0000000a0064006500700074006800000004b9000000950000000000000000fb0000000a006400650070007400680000000481000000cd0000000000000000fb0000000a006400650070007400680000000429000001250000000000000000fb0000000a0064006500700074006800000003b7000000af0000000000000000fb0000000a0064006500700074006800000003d5000000b50000000000000000fb0000000a006400650070007400680000000444000001260000000000000000fb0000000a00640065007000740068000000041f0000014b0000000000000000fb0000000a0064006500700074006800000001b8000000160000000000000000fb0000000a0064006500700074006800000001c1000000160000000000000000fb0000000a0064006500700074006800000004b1000000550000000000000000fb0000000a006400650070007400680000000505000000650000000000000000fb0000000a006400650070007400680000000502000000680000000000000000fb0000000a0064006500700074006800000004f9000000710000000000000000fb0000000a0064006500700074006800000004e9000000810000000000000000fb0000000a0064006500700074006800000004de0000008c0000000000000000fb0000000a0064006500700074006800000004cc0000009e0000000000000000fb0000000a0064006500700074006800000004bb000000af0000000000000000fb0000000a0064006500700074006800000004aa000000c00000000000000000fb0000000a006400650070007400680000000498000000d20000000000000000fb0000000a0049006d00610067006500000003fa000001540000000000000000fb0000000a006400650070007400680000000369000000d00000000000000000fb0000000a0064006500700074006801000003c6000000d30000000000000000fb0000000a0064006500700074006801000003a3000000d20000000000000000fb0000000a00640065007000740068000000038c000000d10000000000000000000000010000010f00000385fc0200000002fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000006100000003bfc0100000002fb0000000800540069006d00650000000000000006100000042400fffffffb0000000800540069006d0065010000000000000450000000000000000000000747000004ce00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000015b000004eefc0200000028fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005d00fffffffb0000001e0054006f006f006c002000500072006f0070006500720074006900650073020000056d0000024500000213000001f3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000003f0000030f000000cc00fffffffb0000000a005600690065007700730000000354000001d9000000a900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d00650072006100000001d1000000b50000000000000000fb0000000a0049006d00610067006502000005000000039800000280000001e0fb0000000a006400650070007400680000000244000002310000001700fffffffb0000000a0049006d0061006700650100000415000000f80000000000000000fb0000000a0049006d00610067006501000003f4000001190000000000000000fb0000000a0064006500700074006800000004a2000000ac0000001700fffffffb0000000a0064006500700074006800000003b4000001b60000001700fffffffb0000000a0064006500700074006800000004b9000000950000000000000000fb0000000a006400650070007400680000000481000000cd0000000000000000fb0000000a006400650070007400680000000429000001250000000000000000fb0000000a0064006500700074006800000003b7000000af0000000000000000fb0000000a0064006500700074006800000003d5000000b50000000000000000fb0000000a006400650070007400680000000444000001260000000000000000fb0000000a00640065007000740068000000041f0000014b0000000000000000fb0000000a0064006500700074006800000001b8000000160000000000000000fb0000000a0064006500700074006800000001c1000000160000000000000000fb0000000a0064006500700074006800000004b1000000550000000000000000fb0000000a006400650070007400680000000505000000650000000000000000fb0000000a006400650070007400680000000502000000680000000000000000fb0000000a0064006500700074006800000004f9000000710000000000000000fb0000000a0064006500700074006800000004e9000000810000000000000000fb0000000a0064006500700074006800000004de0000008c0000000000000000fb0000000a0064006500700074006800000004cc0000009e0000000000000000fb0000000a0064006500700074006800000004bb000000af0000000000000000fb0000000a0064006500700074006800000004aa000000c00000000000000000fb0000000a006400650070007400680000000498000000d20000000000000000fb0000000a0049006d00610067006500000003fa000001540000000000000000fb0000000a006400650070007400680000000369000000d00000000000000000fb0000000a0064006500700074006801000003c6000000d30000000000000000fb0000000a0064006500700074006801000003a3000000d20000000000000000fb0000000a00640065007000740068000000038c000000d10000000000000000000000010000010f00000385fc0200000002fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000006100000003bfc0100000002fb0000000800540069006d00650000000000000006100000042400fffffffb0000000800540069006d0065010000000000000450000000000000000000000614000004ee00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -1441,9 +1902,9 @@ Window Geometry:
   Tool Properties:
     collapsed: false
   Views:
-    collapsed: false
-  Width: 2216
-  X: 12
-  Y: 1144
+    collapsed: true
+  Width: 1556
+  X: 676
+  Y: 1116
   depth:
     collapsed: false

@@ -1,0 +1,92 @@
+planner:
+  corridor_tau: 0.3
+
+fsm:
+  goal_tolerance: 1.0
+  replan_tolerance: 1.0
+  replan_duration: 0.1
+  replan_start_time: 0.01 # some set in xml
+  colli_check_duration: 0.5
+  replan_max_failures: 5
+
+search:
+  max_tau: 1.8
+  init_max_tau: 0.8
+  max_vel: 2.0
+  max_acc: 5.0
+  w_time: 5.0
+  horizon: 5.0
+  lambda_heu: 5.0
+  resolution_astar: 0.15
+  time_resolution: 0.3
+  vel_margin: 0.0
+  margin: 0.6
+  allocate_num: 100000
+  check_num: 1
+
+corridor:
+  init_range: 1.5
+  min_volumn: 0.1
+  shrink_size: 0.00
+
+optimizer:
+  pos_factor: 0.0
+  vel_factor: 0.0
+  acc_factor: 0.0
+  jerk_factor: 0.0
+  snap_factor: 1.0 # minimum snap
+  delta_corridor: 0.4
+
+  max_vel_optimization: 2.0 # Constraint in optimization. A little larger than max_vel
+  max_acc_optimization: 5.0 # Constraint in optimization. A little larger than max_acc
+
+map:
+  booleans:
+    sub_pose: false
+    pub_world_frame: true
+    pub_spatio_temporal: false
+  voxel_size_x: 65
+  voxel_size_y: 65
+  voxel_size_z: 35
+
+  resolution: 0.1
+  angle_resolution: 3
+  time_resolution: 0.3
+  n_risk_map: 3
+  n_prediction_per_risk: 3
+  n_particles_max_per_voxel: 18
+  stddev_pos: 0.05
+  stddev_vel: 0.05
+  sigma_update: 0.1
+
+  sigma_observation: 0.01
+  sigma_localization: 0.00
+
+  risk_threshold_voxel: 0.08
+  risk_threshold_voxel_decay: 0.010
+  risk_threshold_region: 0.55 # For astar
+  risk_threshold_region_decay: 0.1 # linear decay per layer
+
+  local_update_range_x: 5.5
+  local_update_range_y: 5.5
+  local_update_range_z: 4.5
+  obstacles_inflation: 0.3 # deprecated
+  local_map_margin: 10
+  clearance: 0.30 # for astar collision check
+
+  ceiling_height: 2.2
+  ground_height: 0.1
+  corridor_safety_distance: 0.0 # deprecated
+  show_occ_time: false
+  pose_type: 1
+  frame_id: world
+
+visualization:
+  rviz_map_center_locked: false
+
+swarm:
+  num_robots: 4
+  drone_size_x: 0.3
+  drone_size_y: 0.3
+  drone_size_z: 0.4
+  replan_risk_rate: 0.00

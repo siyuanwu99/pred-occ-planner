@@ -1,40 +1,38 @@
 planner:
-  corridor_tau: 0.2
+  corridor_tau: 0.3
 
 fsm:
   goal_tolerance: 1.0
   replan_tolerance: 1.0
-  replan_duration: 0.10
+  replan_duration: 0.1
+  replan_start_time: 0.02
+  colli_check_duration: 0.2
+  replan_max_failures: 5
 
 search:
-  max_tau: 1.8 # Astar search time horizon
+  max_tau: 2.0 # Astar search time horizon
   init_max_tau: 0.8 # Useless
-  max_vel: 2.0
-  max_acc: 6.0
-  w_time: 10.0
+  max_vel: 2
+  max_acc: 6
+  w_time: 5.0
   horizon: 5.0
   lambda_heu: 5.0
-  resolution_astar: 0.1
-  time_resolution: 0.2
-  margin: 0.4
-  vel_margin: 0.0
-  allocate_num: 100000
-  check_num: 5
+  resolution_astar: 0.15
+  time_resolution: 0.3
+  margin: 0.6
+  # vel_margin: 0.0
+  allocate_num: 10000
+  check_num: 1
+  is_test: false
 
 corridor:
-  init_range: 1.5
-  min_volumn: 0.1
+  init_range: 1.2
+  min_volumn: 0.001
+  shrink_size: 0.20
   risk_threshold_single_voxel: 0.15 # Useless
   risk_threshold_corridor: 3.0 # Useless
 
 optimizer: # Useless
-  pos_factor: 0.0
-  vel_factor: 0.0
-  acc_factor: 0.0
-  jerk_factor: 0.0
-  snap_factor: 1.0 # minimum snap
-  delta_corridor: 0.4
-
   max_vel_optimization: 2 # Constraint in optimization. A little larger than max_vel
   max_acc_optimization: 6 # Constraint in optimization. A little larger than max_acc
 
@@ -46,8 +44,8 @@ map:
   local_update_range_x: 4.5
   local_update_range_y: 4.5
   local_update_range_z: 3.5
-  resolution: 0.10
-  risk_threshold: 0.2
+  resolution: 0.15
+  risk_threshold: 0.5
 
   angle_resolution: 3
   time_resolution: 0.2
@@ -68,8 +66,9 @@ map:
   obstacles_inflation: 0.3
   local_map_margin: 10
   ground_height: -0.01
-
-  clearance: 0.3
+  ceiling_height: 3.00
+  corridor_safety_distance: 0.0 # for corridor generation
+  clearance: 0.45 # for astar collision check
 
   publish_spatio_temporal: true
   virtual_ceil_height: 2.9
@@ -83,6 +82,7 @@ visualization:
 
 swarm:
   num_robots: 4
-  drone_size_x: 0.3
-  drone_size_y: 0.3
-  drone_size_z: 0.4
+  drone_size_x: 0.4
+  drone_size_y: 0.4
+  drone_size_z: 0.45
+  replan_risk_rate: 0.00

@@ -1,0 +1,79 @@
+<launch>
+  <env name="ROSCONSOLE_FORMAT" value="[${node}][${time:%H:%M:%S%F}][${severity}]:${message}"/>
+  <arg name="obj_num" value="10" />
+
+  <arg name="map_size_x" value="20.0" />
+  <arg name="map_size_y" value="10.0" />
+  <arg name="map_size_z" value=" 2.0" />
+  <arg name="odom_topic" value="/mavros/local_position/odom" />
+  <arg name="pose_topic" value="/mavros/local_position/pose" />
+
+  <arg name="init_x" value="-10" />
+  <arg name="init_y" value="0.0" />
+  <arg name="init_z" value="0.5" />
+
+  <!-- SIMULATOR -->
+	<!-- map -->
+	<node pkg ="map_generator" name ="map_generator" type ="dynamic_forest" output = "screen">
+		<param name="init_state_x"   value="0.0"/>
+		<param name="init_state_y"   value="0.0"/>
+		<param name="map/x_size"     value="$(arg map_size_x)" />
+		<param name="map/y_size"     value="$(arg map_size_y)" />
+		<param name="map/z_size"     value="$(arg map_size_z)" />
+		<param name="map/resolution" value="0.1"/>        
+		<param name="map/frame_id"     value="world" />
+
+		<param name="ObstacleShape/seed" value="-1"/>
+		<param name="map/obs_num"    value="10"/>
+		<param name="ObstacleShape/lower_rad" value="0.5"/>
+		<param name="ObstacleShape/upper_rad" value="1.0"/>
+		<param name="ObstacleShape/lower_hei" value="4.0"/>
+		<param name="ObstacleShape/upper_hei" value="4.0"/>        
+		<param name="ObstacleShape/set_cylinder" value="true"/>     
+
+		<param name="map/circle_num" value="0"/>        
+		<param name="ObstacleShape/radius_l" value="0.7"/>        
+		<param name="ObstacleShape/radius_h" value="0.5"/>        
+		<param name="ObstacleShape/z_l" value="0.7"/>        
+		<param name="ObstacleShape/z_h" value="0.8"/>        
+		<param name="ObstacleShape/theta" value="0.5"/>        
+
+		<param name="sensing/radius" value="5.0"/>        
+		<param name="sensing/rate"   value="5.0"/>   
+</node>
+
+
+<include file="$(find rast_corridor_planning)/launch/sim_single_drone.xml">
+  <arg name="drone_id" value="1" />
+  <arg name="init_x" value="-10" />
+  <arg name="init_y" value="-2.0" />
+  <arg name="init_z" value="0.5" />
+  <arg name="map_size_x" value="$(arg map_size_x)" />
+  <arg name="map_size_y" value="$(arg map_size_y)" />
+  <arg name="map_size_z" value="$(arg map_size_z)" />
+</include>
+   
+<include file="$(find rast_corridor_planning)/launch/sim_single_drone.xml">
+  <arg name="drone_id" value="0" />
+  <arg name="init_x" value="-10" />
+  <arg name="init_y" value="2.0" />
+  <arg name="init_z" value="0.5" />
+  <arg name="map_size_x" value="$(arg map_size_x)" />
+  <arg name="map_size_y" value="$(arg map_size_y)" />
+  <arg name="map_size_z" value="$(arg map_size_z)" />
+</include>
+
+<include file="$(find rast_corridor_planning)/launch/sim_single_drone.xml">
+  <arg name="drone_id" value="2" />
+  <arg name="init_x" value="-10" />
+  <arg name="init_y" value="0.0" />
+  <arg name="init_z" value="0.5" />
+  <arg name="map_size_x" value="$(arg map_size_x)" />
+  <arg name="map_size_y" value="$(arg map_size_y)" />
+  <arg name="map_size_z" value="$(arg map_size_z)" />
+</include>
+   
+
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find rast_corridor_planning)/rviz/sim_multi.rviz" />
+  <!--	<node pkg="rviz" type="rviz" name="rviz2" args="-d $(find dynamic_occpuancy_map)/rviz/future_status.rviz"/>-->
+</launch>

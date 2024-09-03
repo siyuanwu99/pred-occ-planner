@@ -258,7 +258,7 @@ void MADER::getAgentsTrajectory(std::vector<Eigen::Vector3d> &points, int idx_ag
 
 /**
  * @brief get waypoints of the agent 'idx_agent' at time 't'
- * @param pts
+ * @param pts : waypoints buffer to be filled
  * @param idx_agent
  * @param t
  */

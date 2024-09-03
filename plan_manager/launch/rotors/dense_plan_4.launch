@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<launch>
+  <env name="ROSCONSOLE_FORMAT" value="[${node}][${time:%H:%M:%S%F}][${severity}]:${message}"/>
+  <arg name="map_size_x" value="16" />
+  <arg name="map_size_y" value="16" />
+  <arg name="map_size_z" value="7" />
+  <arg name="obs_num" value="10" />
+  <arg name="num_robots" value="2" />
+
+  <!-- UAV0 -->
+  <arg name="uav0_init_x" default="6"/>
+  <arg name="uav0_init_y" default="8"/>
+  <arg name="uav0_init_z" default="1"/>
+  <arg name="uav0_init_qx" default="0"/>
+  <arg name="uav0_init_qy" default="0"/>
+  <arg name="uav0_init_qz" default="0.707"/>
+  <arg name="uav0_init_qw" default="-0.707"/>
+  <arg name="uav0_goal_x" value="2" />
+  <arg name="uav0_goal_y" value="-8" />
+  <arg name="uav0_goal_z" value="1" />
+
+  <group ns="uav0">
+    <include file="$(find plan_manager)/launch/rotors/drone.xml">
+      <arg name="drone_id" value="0" />
+      <arg name="map_size_x" value="$(arg map_size_x)" />
+      <arg name="map_size_y" value="$(arg map_size_y)" />
+      <arg name="map_size_z" value="$(arg map_size_z)" />
+      <arg name="init_x" value="$(arg uav0_init_x)"/>"
+      <arg name="init_y" value="$(arg uav0_init_y)"/>"
+      <arg name="init_z" value="$(arg uav0_init_z)"/>"
+      <arg name="init_qx" value="$(arg uav0_init_qx)"/>"
+      <arg name="init_qy" value="$(arg uav0_init_qy)"/>"
+      <arg name="init_qz" value="$(arg uav0_init_qz)"/>"
+      <arg name="init_qw" value="$(arg uav0_init_qw)"/>"
+      <arg name="goal_x" value="$(arg uav0_goal_x)" />
+      <arg name="goal_y" value="$(arg uav0_goal_y)" />
+      <arg name="goal_z" value="$(arg uav0_goal_z)" />
+    </include>
+  </group>
+
+  <!-- UAV1 -->
+  <arg name="uav1_init_x" default="6"/>
+  <arg name="uav1_init_y" default="-8"/>
+  <arg name="uav1_init_z" default="1"/>
+  <arg name="uav1_init_qx" default="0"/>
+  <arg name="uav1_init_qy" default="0"/>
+  <arg name="uav1_init_qz" default="0.707"/>
+  <arg name="uav1_init_qw" default="0.707"/>
+  <arg name="uav1_goal_x" value="2" />
+  <arg name="uav1_goal_y" value="8" />
+  <arg name="uav1_goal_z" value="1" />
+  <group ns="uav1">
+    <include file="$(find plan_manager)/launch/rotors/drone.xml">
+      <arg name="drone_id" value="1" />
+      <arg name="map_size_x" value="$(arg map_size_x)" />
+      <arg name="map_size_y" value="$(arg map_size_y)" />
+      <arg name="map_size_z" value="$(arg map_size_z)" />
+      <arg name="init_x" value="$(arg uav1_init_x)"/>"
+      <arg name="init_y" value="$(arg uav1_init_y)"/>"
+      <arg name="init_z" value="$(arg uav1_init_z)"/>"
+      <arg name="init_qx" value="$(arg uav1_init_qx)"/>"
+      <arg name="init_qy" value="$(arg uav1_init_qy)"/>"
+      <arg name="init_qz" value="$(arg uav1_init_qz)"/>"
+      <arg name="init_qw" value="$(arg uav1_init_qw)"/>"
+      <arg name="goal_x" value="$(arg uav1_goal_x)" />
+      <arg name="goal_y" value="$(arg uav1_goal_y)" />
+      <arg name="goal_z" value="$(arg uav1_goal_z)" />
+    </include>
+  </group>
+
+  <!-- UAV2 -->
+  <arg name="uav2_init_x" default="2"/>
+  <arg name="uav2_init_y" default="8"/>
+  <arg name="uav2_init_z" default="1"/>
+  <arg name="uav2_init_qx" default="0"/>
+  <arg name="uav2_init_qy" default="0"/>
+  <arg name="uav2_init_qz" default="0.707"/>
+  <arg name="uav2_init_qw" default="-0.707"/>
+  <arg name="uav2_goal_x" value="6" />
+  <arg name="uav2_goal_y" value="-8" />
+  <arg name="uav2_goal_z" value="1" />
+
+  <group ns="uav2">
+    <include file="$(find plan_manager)/launch/rotors/drone.xml">
+      <arg name="drone_id" value="2" />
+      <arg name="map_size_x" value="$(arg map_size_x)" />
+      <arg name="map_size_y" value="$(arg map_size_y)" />
+      <arg name="map_size_z" value="$(arg map_size_z)" />
+      <arg name="init_x" value="$(arg uav2_init_x)"/>"
+      <arg name="init_y" value="$(arg uav2_init_y)"/>"
+      <arg name="init_z" value="$(arg uav2_init_z)"/>"
+      <arg name="init_qx" value="$(arg uav2_init_qx)"/>"
+      <arg name="init_qy" value="$(arg uav2_init_qy)"/>"
+      <arg name="init_qz" value="$(arg uav2_init_qz)"/>"
+      <arg name="init_qw" value="$(arg uav2_init_qw)"/>"
+      <arg name="goal_x" value="$(arg uav2_goal_x)" />
+      <arg name="goal_y" value="$(arg uav2_goal_y)" />
+      <arg name="goal_z" value="$(arg uav2_goal_z)" />
+    </include>
+  </group>
+
+  <!-- UAV3 -->
+  <arg name="uav3_init_x" default="2"/>
+  <arg name="uav3_init_y" default="-8"/>
+  <arg name="uav3_init_z" default="1"/>
+  <arg name="uav3_init_qx" default="0"/>
+  <arg name="uav3_init_qy" default="0"/>
+  <arg name="uav3_init_qz" default="0.707"/>
+  <arg name="uav3_init_qw" default="0.707"/>
+  <arg name="uav3_goal_x" value="6" />
+  <arg name="uav3_goal_y" value="8" />
+  <arg name="uav3_goal_z" value="1" />
+  <group ns="uav3">
+    <include file="$(find plan_manager)/launch/rotors/drone.xml">
+      <arg name="drone_id" value="3" />
+      <arg name="map_size_x" value="$(arg map_size_x)" />
+      <arg name="map_size_y" value="$(arg map_size_y)" />
+      <arg name="map_size_z" value="$(arg map_size_z)" />
+      <arg name="init_x" value="$(arg uav3_init_x)"/>"
+      <arg name="init_y" value="$(arg uav3_init_y)"/>"
+      <arg name="init_z" value="$(arg uav3_init_z)"/>"
+      <arg name="init_qx" value="$(arg uav3_init_qx)"/>"
+      <arg name="init_qy" value="$(arg uav3_init_qy)"/>"
+      <arg name="init_qz" value="$(arg uav3_init_qz)"/>"
+      <arg name="init_qw" value="$(arg uav3_init_qw)"/>"
+      <arg name="goal_x" value="$(arg uav3_goal_x)" />
+      <arg name="goal_y" value="$(arg uav3_goal_y)" />
+      <arg name="goal_z" value="$(arg uav3_goal_z)" />
+    </include>
+  </group>
+
+
+  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find plan_manager)/rviz/gazebo.rviz" />
+
+</launch>

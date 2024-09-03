@@ -13,7 +13,8 @@
 
 #include <path_searching/dyn_a_star.h>
 #include <path_searching/path_node.h>
-#include <plan_env/fake_dsp_map.h>
+// #include <plan_env/fake_dsp_map.h>
+#include <plan_env/fake_particle_risk_voxel.h>
 // #include <plan_env/risk_voxel.h>
 
 #include <Eigen/Core>
@@ -47,8 +48,8 @@ class FakeRiskHybridAstar : public AStar {
   // Eigen::Vector3d map_center_;  // map center
   Eigen::Vector3d map_size_;
 
-  FakeRiskVoxel::Ptr grid_map_;
-  // FakeFakeRiskVoxel::Ptr grid_map_;
+  FakeParticleRiskVoxel::Ptr grid_map_;
+  // FakeRiskVoxel::Ptr grid_map_;
   // GridNodePtr ***          GridNodeMap_;
   std::vector<PathNodePtr>                                                   node_path_;
   NodeHashTable                                                              expanded_nodes_;
@@ -92,7 +93,7 @@ class FakeRiskHybridAstar : public AStar {
 
   /* main API */
   void setParam(ros::NodeHandle& nh);
-  void setEnvironment(const FakeRiskVoxel::Ptr& grid_map);
+  void setEnvironment(const FakeParticleRiskVoxel::Ptr& grid_map) { grid_map_ = grid_map; }
   void setMapCenter(const Eigen::Vector3d& map_center) { map_center_ = map_center; }
   void init(const Eigen::Vector3d& map_center, const Eigen::Vector3d& map_size);
   void reset();

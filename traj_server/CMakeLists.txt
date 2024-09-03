@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(traj_server)
 
-set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_BUILD_TYPE "Release")
 add_compile_options(-std=c++14)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -g")
 
@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   quadrotor_msgs
   trajectory_msgs
   geometry_msgs
+  tf2_ros
 )
 
 catkin_package(
@@ -33,8 +34,14 @@ target_link_libraries(poly_traj_server ${catkin_LIBRARIES})
 add_executable(bezier_traj_server src/bezier_traj_server.cpp)
 target_link_libraries(bezier_traj_server ${catkin_LIBRARIES})
 
+add_executable(color_traj src/color_traj_node.cpp)
+target_link_libraries(color_traj ${catkin_LIBRARIES})
+
 add_executable(trigger src/trigger.cpp)
 target_link_libraries(trigger ${catkin_LIBRARIES})
+
+add_executable(odom_local2global src/odom_local2global.cpp)
+target_link_libraries(odom_local2global ${catkin_LIBRARIES})
 
 # TODO
 # add_executable(bspline_server src/bspline_traj_server.cpp)

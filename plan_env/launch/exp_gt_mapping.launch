@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="is_pose_subscribed" value="true" />
+
+  <group ns="drone2">
+    <arg name="drone_id" value="1"/>
+    <arg name="pose_topic" value="/drone2/optitrack/pose"/>
+    <node pkg="plan_env" type="pedestrian_mapping" name="map" >
+      <remap from="~map/pose" to="$(arg pose_topic)" />
+      <remap from="~map/future_risk" to="vis/map/future_risk" />
+      <remap from="~map/time" to="vis/map/time" />
+      <param name="map/booleans/sub_pose" value="$(arg is_pose_subscribed)" />
+      <rosparam file="$(find plan_env)/config/pedestrian.yaml" command="load" />
+    </node>
+
+    <node pkg="plan_env" type="gt_visualizer" name="vis" >
+      <remap from="~map/pose" to="$(arg pose_topic)" />
+      <remap from="/broadcast_traj_to_planner" to="/broadcast_traj" />
+      <rosparam file="$(find plan_manager)/config/real_cfg.yaml" command="load" />
+      <param name="drone_id" value="$(arg drone_id)" />
+      <param name="map/booleans/sub_pose" value="$(arg is_pose_subscribed)" />
+    </node>
+
+    <node pkg="odom_visualization" name="odom_visualization" type="simple_odom_visualization" output="screen">
+      <remap from="~pose" to="$(arg pose_topic)" />
+      <param name="color/a" value="1.0" />
+      <param name="mesh_resource" value="file://$(find odom_visualization)/meshes/mantis.dae" />
+      <param name="color/r" value="0.0" />
+      <param name="color/g" value="0.0" />
+      <param name="color/b" value="0.0" />
+      <param name="covariance_scale" value="100.0" />
+      <param name="robot_scale" value="0.002" />
+      <param name="drone_id" value="$(arg drone_id)" />
+    </node>
+  </group>
+
+  <group ns="drone3">
+    <arg name="drone_id" value="3"/>
+    <arg name="pose_topic" value="/drone$(arg drone_id)/optitrack/pose"/>
+    <node pkg="plan_env" type="pedestrian_mapping" name="map" >
+      <remap from="~map/pose" to="$(arg pose_topic)" />
+      <remap from="~map/future_risk" to="vis/map/future_risk" />
+      <remap from="~map/time" to="vis/map/time" />
+      <param name="map/booleans/sub_pose" value="$(arg is_pose_subscribed)" />
+      <rosparam file="$(find plan_env)/config/pedestrian.yaml" command="load" />
+    </node>
+
+    <node pkg="plan_env" type="gt_visualizer" name="vis" >
+      <remap from="~map/pose" to="$(arg pose_topic)" />
+      <remap from="/broadcast_traj_to_planner" to="/broadcast_traj" />
+      <rosparam file="$(find plan_manager)/config/real_cfg.yaml" command="load" />
+      <param name="drone_id" value="$(arg drone_id)" />
+      <param name="map/booleans/sub_pose" value="$(arg is_pose_subscribed)" />
+    </node>
+
+    <node pkg="odom_visualization" name="odom_visualization" type="simple_odom_visualization" output="screen">
+      <remap from="~pose" to="$(arg pose_topic)" />
+      <param name="color/a" value="1.0" />
+      <param name="mesh_resource" value="file://$(find odom_visualization)/meshes/mantis.dae" />
+      <param name="color/r" value="0.0" />
+      <param name="color/g" value="0.0" />
+      <param name="color/b" value="0.0" />
+      <param name="covariance_scale" value="100.0" />
+      <param name="robot_scale" value="0.002" />
+      <param name="drone_id" value="$(arg drone_id)" />
+    </node>
+  </group>
+
+</launch>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="drone_id" default="0" />
+  <arg name="init_x" value="-10.0" />
+  <arg name="init_y" value="0.0" />
+  <arg name="init_z" value="1.0" />
+  <arg name="map_size_x" value="13" />
+  <arg name="map_size_y" value="13" />
+  <arg name="map_size_z" value="7" />
+
+  <arg name="is_pose_subscribed" value="true" />
+  <!-- <arg name="odom_topic" value="/uav$(arg drone_id)/ground_truth/odometry"/> -->
+  <arg name="pose_topic" value="/drone3/optitrack/pose"/>
+  <arg name="ped1_pose" value="/pedestrian1/optitrack/pose"/>
+  <arg name="ped2_pose" value="/pedestrian2/optitrack/pose"/>
+  <arg name="ped3_pose" value="/drone3/optitrack/pose"/>
+  <!-- <arg name="depth_topic" value="/uav$(arg drone_id)/depth/points"/> -->
+  <!-- <arg name="pose_topic" value="/mavros/local_position/pose"/> -->
+
+  <node pkg="plan_env" type="pedestrian_mapping" name="map" output="screen">
+    <remap from="~map/pose" to="$(arg pose_topic)" />
+    <remap from="/pedestrian1/optitrack/pose" to="$(arg ped1_pose)" />
+    <remap from="/pedestrian2/optitrack/pose" to="$(arg ped2_pose)" />
+    <remap from="/pedestrian3/optitrack/pose" to="$(arg ped3_pose)" />
+    <remap from="~map/future_risk" to="/uav$(arg drone_id)/planner/map/future_risk" />
+    <remap from="~map/time" to="/uav$(arg drone_id)/planner/map/time" />
+
+    <param name="map/booleans/sub_pose" value="$(arg is_pose_subscribed)" />
+    <rosparam file="$(find plan_env)/config/pedestrian.yaml" command="load" />
+  </node>
+
+
+  <node pkg="rviz" name="rviz_pedestrian" type="rviz" args="-d $(find plan_env)/rviz/pedestrian.rviz" />
+
+</launch>

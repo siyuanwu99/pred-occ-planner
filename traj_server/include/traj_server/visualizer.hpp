@@ -14,6 +14,7 @@
 
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <quadrotor_msgs/PositionCommand.h>
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <visualization_msgs/Marker.h>
@@ -34,8 +35,9 @@
 class TrajSrvVisualizer {
  private:
   ros::NodeHandle _nh;
-  ros::Publisher  _vis_queue_pub, _vis_drone_pub;
+  ros::Publisher  _vis_queue_pub, _vis_drone_pub, _vis_cmd_pub;
   Eigen::Vector3d _prev_pos;
+  std::string     _tf_child_frame_id;
 
   /* boardcast tf */
   bool                      _if_pub_tf;
@@ -45,11 +47,25 @@ class TrajSrvVisualizer {
   TrajSrvVisualizer(ros::NodeHandle& nh) : _nh(nh) {
     _vis_queue_pub = _nh.advertise<visualization_msgs::Marker>("vis_traj", 1);
     _vis_drone_pub = _nh.advertise<visualization_msgs::Marker>("vis_drone", 1);
+    _vis_cmd_pub   = _nh.advertise<visualization_msgs::Marker>("vis_cmd", 1);
     _if_pub_tf     = false;
+
+    std::string tf_prefix;
     _nh.getParam("tf", _if_pub_tf);
+    _nh.getParam("tf_prefix", tf_prefix);
+
+    if (tf_prefix.empty()) {
+      tf_prefix = ros::this_node::getNamespace() + "/";
+    } else {
+      tf_prefix += "/";
+    }
+
+    _tf_child_frame_id = tf_prefix + "base_link";
+
     _tf_broadcaster = new tf::TransformBroadcaster();
   }
   ~TrajSrvVisualizer() {}
+
   typedef std::shared_ptr<TrajSrvVisualizer> Ptr;
 
   void visualizeTraj(std::queue<TrajPoint> queue,
@@ -105,16 +121,6 @@ class TrajSrvVisualizer {
 
   void visualizeOdom(const geometry_msgs::PoseStampedPtr& pose,
                      const std::string                    frame_id = "world") {
-    // Eigen::Vector3d p;
-    // p[0] = pose->pose.position.x;
-    // p[1] = pose->pose.position.y;
-    // p[2] = pose->pose.position.z;
-    // Eigen::Quaterniond q;
-    // q.w() = pose->pose.orientation.w;
-    // q.x() = pose->pose.orientation.x;
-    // q.y() = pose->pose.orientation.y;
-    // q.z() = pose->pose.orientation.z;
-
     visualization_msgs::Marker mesh_mk;
     mesh_mk.header.frame_id    = frame_id;
     mesh_mk.header.stamp       = ros::Time::now();
@@ -145,9 +151,42 @@ class TrajSrvVisualizer {
           tf::Vector3(pose->pose.position.x, pose->pose.position.y, pose->pose.position.z));
       transform.setRotation(tf::Quaternion(pose->pose.orientation.x, pose->pose.orientation.y,
                                            pose->pose.orientation.z, pose->pose.orientation.w));
-      _tf_broadcaster->sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world",
-                                                          "drone"));
+      _tf_broadcaster->sendTransform(
+          tf::StampedTransform(transform, ros::Time::now(), "world", _tf_child_frame_id));
     }
+  }
+
+  // visualize the desired trajectory point
+  void visualizeCmd(const quadrotor_msgs::PositionCommand cmd) {
+    if (cmd.header.frame_id == string("null")) return;
+
+    Eigen::Vector3d    pos(cmd.position.x, cmd.position.y, cmd.position.z);
+    Eigen::Quaterniond q(1.0, 0.0, 0.0, 0.0);
+    // rotate by yaw
+    q = q * Eigen::AngleAxisd(cmd.yaw, Eigen::Vector3d::UnitZ());
+
+    visualization_msgs::Marker mesh_mk;
+    mesh_mk.header.frame_id    = cmd.header.frame_id;
+    mesh_mk.header.stamp       = ros::Time::now();
+    mesh_mk.ns                 = "drone";
+    mesh_mk.id                 = 0;
+    mesh_mk.type               = visualization_msgs::Marker::ARROW;
+    mesh_mk.action             = visualization_msgs::Marker::ADD;
+    mesh_mk.pose.position.x    = pos[0];
+    mesh_mk.pose.position.y    = pos[1];
+    mesh_mk.pose.position.z    = pos[2];
+    mesh_mk.pose.orientation.w = q.w();
+    mesh_mk.pose.orientation.x = q.x();
+    mesh_mk.pose.orientation.y = q.y();
+    mesh_mk.pose.orientation.z = q.z();
+    mesh_mk.scale.x            = 1.0;
+    mesh_mk.scale.y            = 0.1;
+    mesh_mk.scale.z            = 0.1;
+    mesh_mk.color.r            = 1.0;
+    mesh_mk.color.g            = 0.0;
+    mesh_mk.color.b            = 0.0;
+    mesh_mk.color.a            = 1.0;
+    _vis_cmd_pub.publish(mesh_mk);
   }
 };
 // }  // namespace visualizer

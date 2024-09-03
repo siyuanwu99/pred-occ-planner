@@ -8,7 +8,7 @@
   <arg name="num_robots" value="4" />
   <arg name="rviz" default="True" />
 
-  <include file="$(find planner)/launch/simulator/simulator_fake.launch">
+  <include file="$(find plan_manager)/launch/simulator/simulator_fake.launch">
     <arg name="map_size_x" value="$(arg map_size_x)" />
     <arg name="map_size_y" value="$(arg map_size_y)" />
     <arg name="map_size_z" value="$(arg map_size_z)" />
@@ -16,7 +16,7 @@
   </include>
 
   <group ns="uav0">
-    <include file="$(find planner)/launch/simulator/vis_drone_fake_perception.xml">
+    <include file="$(find plan_manager)/launch/simulator/vis_drone_fake_perception.xml">
       <arg name="drone_id" value="0" />
       <arg name="num_robots" value="$(arg num_robots)" />
       <arg name="map_size_x" value="$(arg map_size_x)" />
@@ -32,7 +32,7 @@
   </group>
 
   <group ns="uav1">
-    <include file="$(find planner)/launch/simulator/vis_drone_fake_perception.xml">
+    <include file="$(find plan_manager)/launch/simulator/vis_drone_fake_perception.xml">
       <arg name="drone_id" value="1" />
       <arg name="num_robots" value="$(arg num_robots)" />
       <arg name="map_size_x" value="$(arg map_size_x)" />
@@ -50,7 +50,7 @@
   </group>
 
   <group ns="uav2">
-    <include file="$(find planner)/launch/simulator/drone_fake_perception.xml">
+    <include file="$(find plan_manager)/launch/simulator/drone_fake_perception.xml">
       <arg name="drone_id" value="2" />
       <arg name="num_robots" value="$(arg num_robots)" />
       <arg name="map_size_x" value="$(arg map_size_x)" />
@@ -68,7 +68,7 @@
   </group>
 
   <group ns="uav3">
-    <include file="$(find planner)/launch/simulator/drone_fake_perception.xml">
+    <include file="$(find plan_manager)/launch/simulator/drone_fake_perception.xml">
       <arg name="drone_id" value="3" />
       <arg name="num_robots" value="$(arg num_robots)" />
       <arg name="map_size_x" value="$(arg map_size_x)" />
@@ -86,7 +86,7 @@
   </group>
 
 <group if="$(arg rviz)">
-  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find planner)/rviz/demo.rviz" />
+  <node pkg="rviz" name="rviz" type="rviz" args="-d $(find plan_manager)/rviz/demo.rviz" />
 </group>
 
 </launch>

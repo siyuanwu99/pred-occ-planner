@@ -105,40 +105,6 @@ void FakeRiskVoxel::updateMap(const sensor_msgs::PointCloud2::ConstPtr &cloud_ms
     }
   }
 
-  /* update map fuse perception and ground truth information */
-  // for (auto &point : cloud_filtered->points) {
-  //   Eigen::Vector3f pt = Eigen::Vector3f(point.x, point.y, point.z) - pose_;
-  //
-  //   /* add observed points to the first layer of map */
-  //   if (isInRange(pt)) {
-  //     int idx = getVoxelIndex(pt);
-  //
-  //     risk_maps_[idx][0] = 1.0F;
-  //   }
-  //
-  //   /* add ground truth obstacles to other layers of map */
-  //   for (auto &cyl : gt_cylinders_) {
-  //     Eigen::Vector3f pt_cyl       = Eigen::Vector3f(cyl.x, cyl.y, pt.z() + pose_.z());
-  //     Eigen::Vector3f pt_cyl_to_pt = pt + pose_ - pt_cyl;
-  //
-  //     /* get observed point's distance to ground truth position, move these points to desired
-  //      * position in the future maps*/
-  //     float dist = pt_cyl_to_pt.norm();
-  //     if (dist < cyl.w) { /* point is assigned to cylinder */
-  //       Eigen::Vector3f vel = Eigen::Vector3f(cyl.vx, cyl.vy, 0.0F);
-  //       for (int k = 1; k < PREDICTION_TIMES; k++) {
-  //         Eigen::Vector3f pt_pred = pt + vel * time_resolution_ * k;
-  //         if (isInRange(pt_pred)) {
-  //           int idx            = getVoxelIndex(pt_pred);
-  //           risk_maps_[idx][k] = 1.0F;
-  //         }
-  //       }
-  //       break;
-  //     }
-  //   }
-  // }
-
-  // ros::Time t0 = ros::Time::now();
   /* add points to map and inflation */
   for (auto &points : cloud_filtered->points) {
     Eigen::Vector3f pt = Eigen::Vector3f(points.x, points.y, points.z) - pose_;
@@ -146,49 +112,7 @@ void FakeRiskVoxel::updateMap(const sensor_msgs::PointCloud2::ConstPtr &cloud_ms
       risk_maps_[getVoxelIndex(pt)][0] = 1.0F;
     }
   }
-  // ros::Time t1 = ros::Time::now();
-  // ROS_INFO("add points to map time: %f", (t1 - t0).toSec());
-
-  /* create convolution kernel */
-  // int                          inf_steps = (2 * clearance_) / VOXEL_RESOLUTION + 1;
-  // std::vector<Eigen::Vector3f> inf_pts(std::pow(inf_steps, 3));
-
-  // int n = 0;
-  // for (float xx = -clearance_; xx <= clearance_; xx += VOXEL_RESOLUTION) {
-  //   for (float yy = -clearance_; yy <= clearance_; yy += VOXEL_RESOLUTION) {
-  //     for (float zz = -clearance_; zz <= clearance_; zz += VOXEL_RESOLUTION) {
-  //       inf_pts[n++] = Eigen::Vector3f(xx, yy, zz);
-  //     }
-  //   }
-  // }
-  // ros::Time t2 = ros::Time::now();
-  // ROS_INFO("convolution time: %f", (t2 - t1).toSec());
-
   std::vector<int> obs_idx_list(VOXEL_NUM);
-  // for (int i = 0; i < VOXEL_NUM; i++) {
-  //   if (risk_maps_[i][0] > risk_threshold_) {
-  //     obs_idx_list.push_back(i);
-  //   }
-  // }
-
-  // for (auto &i : obs_idx_list) {
-  //   /* inflate points */
-  //   Eigen::Vector3f pt_obstacle = getVoxelRelPosition(i);
-  //   for (auto &pt : inf_pts) {
-  //     Eigen::Vector3f p   = pt + pt_obstacle;
-  //     int             idx = getVoxelIndex(p);
-  //     if (!isInRange(p) || idx > VOXEL_NUM) {
-  //       continue;
-  //     }
-  //     // idx     = idx > VOXEL_NUM ? VOXEL_NUM - 1 : idx;
-  //     /*  TODO:temporal code to prevent overflow
-  //     REASON: pose_ update while inflation after range check
-  //     */
-  //     risk_maps_[idx][0] = 1.0F;
-  //   }
-  // }
-  // ros::Time t3 = ros::Time::now();
-  // ROS_INFO("inflate time: %f", (t3 - t2).toSec());
 
   /* read ground truth and construct future maps */
   obs_idx_list.clear();
@@ -213,12 +137,12 @@ void FakeRiskVoxel::updateMap(const sensor_msgs::PointCloud2::ConstPtr &cloud_ms
       } else if (cyl.type == 2) {
         Eigen::Vector3f             pt_cyl = Eigen::Vector3f(cyl.x, cyl.y, cyl.z);
         Eigen::Quaternionf          q      = Eigen::Quaternionf(cyl.qw, cyl.qx, cyl.qy, cyl.qz);
-        Eigen::Hyperplane<float, 3> plane =
-            Eigen::Hyperplane<float, 3>::Through(pt_cyl,pt_cyl +  q * Eigen::Vector3f(0, 1, 0), pt_cyl + q * Eigen::Vector3f(1, 0, 0));
+        Eigen::Hyperplane<float, 3> plane  = Eigen::Hyperplane<float, 3>::Through(
+            pt_cyl, pt_cyl + q * Eigen::Vector3f(0, 1, 0), pt_cyl + q * Eigen::Vector3f(1, 0, 0));
         Eigen::Vector3f b             = plane.projection(pt);
         float           dist_to_plane = plane.absDistance(pt);
         float           dist          = (pt_cyl - b).norm();
-        if (abs(cyl.w / 2- dist) < 2 * resolution_ && dist_to_plane <2 *  resolution_) {
+        if (abs(cyl.w / 2 - dist) < 2 * resolution_ && dist_to_plane < 2 * resolution_) {
           vel = Eigen::Vector3f(cyl.vx, cyl.vy, 0.0F);
           break;
         }

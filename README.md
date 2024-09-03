@@ -31,7 +31,7 @@ https://user-images.githubusercontent.com/44539400/223415381-6c7bb7a4-94b9-4e77-
 3. Clone this repository
 
    ```shell
-   git clone https://github.com/edmundwsy/pred-occ-planner.git
+   git clone https://github.com/siyuanwu99/pred-occ-planner.git
    cd pred-occ-planner
    ```
 
@@ -51,7 +51,7 @@ You can start the simulation by following scripts:
 ```shell
 # Go to your workspace
 source devel/setup.bash
-roslaunch planner sim_fkpcp_4_case_1.launch
+roslaunch plan_manager sim_fkpcp_4_case_4.launch
 ```
 
 Then it will start a RVIZ window with 4 drones in a dynamic environment as follows:
