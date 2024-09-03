@@ -1,4 +1,4 @@
-<jlaunch>
+<launch>
   <arg name="drone_id" default="0" />
 
   <group if="$(eval drone_id == 0)">

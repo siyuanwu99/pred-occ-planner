@@ -55,7 +55,7 @@
   <node pkg="traj_server" name="traj_server" type="bezier_traj_server" output="screen">
     <remap from="~trajectory" to="planner/trajectory" />
     <remap from="/position_cmd" to="controller/pos_cmd" />
-    <remap from="~odom" to="$(arg pose_topic)" />
+    <remap from="~pose" to="$(arg pose_topic)" />
     <param name="init_x" value="$(arg init_x)" />
     <param name="init_y" value="$(arg init_y)" />
     <param name="init_z" value="$(arg init_z)" />
