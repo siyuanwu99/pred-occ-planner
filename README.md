@@ -54,6 +54,12 @@ source devel/setup.bash
 roslaunch plan_manager sim_fkpcp_4_case_4.launch
 ```
 
+You can try a much more complex dynamic map as follows:
+
+```
+roslaunch plan_manager sim_new_4_case_3.launch
+```
+
 Then it will start a RVIZ window with 4 drones in a dynamic environment as follows:
 ![sim](./images/sim.gif)
 
